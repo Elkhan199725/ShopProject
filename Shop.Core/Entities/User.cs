@@ -12,4 +12,6 @@ public class User:AbstractClass
     public string Email { get; set; } = null!;
     public string? Phone { get; set; }
     public ICollection<DeliveryAddress>? DeliveryAddresses { get; set; }
+    public ICollection<Wallet>? Wallets { get; set; }
+    public ICollection<Invoice>? Invoices { get; set; }
 }
