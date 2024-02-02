@@ -19,6 +19,10 @@ public class AppDbContext : DbContext
             .HasKey(w => w.Id);        
         modelBuilder.Entity<Invoice>()
             .HasKey(i => i.Id);
+        modelBuilder.Entity<Basket>()
+            .HasKey(b => b.Id);
+        modelBuilder.Entity<Product>()
+            .HasKey(p => p.Id);
 
         modelBuilder.Entity<User>()
             .HasMany(u => u.DeliveryAddresses)
@@ -39,10 +43,20 @@ public class AppDbContext : DbContext
             .WithOne(i => i.User)
             .HasForeignKey(i => i.UserId);
 
+        modelBuilder.Entity<User>()
+            .HasMany(u => u.Baskets)
+            .WithOne(b => b.User)
+            .HasForeignKey(b => b.UserId);
+
         modelBuilder.Entity<Wallet>()
             .HasMany(w=>w.Invoices)
             .WithOne(i => i.Wallet)
             .HasForeignKey(i => i.WalletId);
+
+        modelBuilder.Entity<Product>()
+            .HasMany(p => p.Baskets)
+            .WithOne(b => b.Product)
+            .HasForeignKey(b => b.PropductId);
 
         modelBuilder.Entity<Wallet>()
             .HasIndex(w => w.CardNumber)
@@ -52,5 +66,7 @@ public class AppDbContext : DbContext
     public DbSet<User> Users { get; set; } = null!;
     public DbSet<DeliveryAddress> DeliveryAddresses { get; set; } = null!;
     public DbSet<Invoice> Invoices { get; set; } = null!;
+    public DbSet<Basket> Baskets { get; set; } = null!;
+    public DbSet<Product> Products { get; set; } = null!;
 
 }

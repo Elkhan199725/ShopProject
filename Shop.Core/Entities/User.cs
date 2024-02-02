@@ -14,4 +14,5 @@ public class User:AbstractClass
     public ICollection<DeliveryAddress>? DeliveryAddresses { get; set; }
     public ICollection<Wallet>? Wallets { get; set; }
     public ICollection<Invoice>? Invoices { get; set; }
+    public ICollection<Basket>? Baskets { get; set; }
 }

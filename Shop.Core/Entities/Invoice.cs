@@ -12,4 +12,5 @@ public class Invoice:AbstractClass
     public int? WalletId { get; set; }
     public User? User { get; set; }
     public Wallet? Wallet { get; set; }
+    public ICollection<InvoiceItem>? InvoiceItems { get; set; }
 }
