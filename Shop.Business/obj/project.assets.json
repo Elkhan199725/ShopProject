@@ -599,23 +599,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Elkhan Mammadli\\.nuget\\packages\\": {},
+    "C:\\Users\\elkhantma\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Elkhan Mammadli\\OneDrive\\Desktop\\ShopProject\\Shop.Business\\Shop.Business.csproj",
+      "projectUniqueName": "C:\\Users\\elkhantma\\Source\\Repos\\ShopProject\\Shop.Business\\Shop.Business.csproj",
       "projectName": "Shop.Business",
-      "projectPath": "C:\\Users\\Elkhan Mammadli\\OneDrive\\Desktop\\ShopProject\\Shop.Business\\Shop.Business.csproj",
-      "packagesPath": "C:\\Users\\Elkhan Mammadli\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Elkhan Mammadli\\OneDrive\\Desktop\\ShopProject\\Shop.Business\\obj\\",
+      "projectPath": "C:\\Users\\elkhantma\\Source\\Repos\\ShopProject\\Shop.Business\\Shop.Business.csproj",
+      "packagesPath": "C:\\Users\\elkhantma\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\elkhantma\\Source\\Repos\\ShopProject\\Shop.Business\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\Elkhan Mammadli\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\elkhantma\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -624,15 +624,14 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "net7.0": {
           "targetAlias": "net7.0",
           "projectReferences": {
-            "C:\\Users\\Elkhan Mammadli\\OneDrive\\Desktop\\ShopProject\\Shop.Core\\Shop.Core.csproj": {
-              "projectPath": "C:\\Users\\Elkhan Mammadli\\OneDrive\\Desktop\\ShopProject\\Shop.Core\\Shop.Core.csproj"
+            "C:\\Users\\elkhantma\\Source\\Repos\\ShopProject\\Shop.Core\\Shop.Core.csproj": {
+              "projectPath": "C:\\Users\\elkhantma\\Source\\Repos\\ShopProject\\Shop.Core\\Shop.Core.csproj"
             }
           }
         }
@@ -668,7 +667,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.101\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.302\\RuntimeIdentifierGraph.json"
       }
     }
   }

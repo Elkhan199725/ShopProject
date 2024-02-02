@@ -4,7 +4,7 @@ namespace Shop.Core.Entities;
 
 public class Invoice:AbstractClass
 {
-    public int Id { get; set; }
+    public int? Id { get; set; }
     public decimal? TotalPrice { get; set; }
     public DateTime? InvoiceDate { get; set; }
     public string? PaymantMethod { get; set; }

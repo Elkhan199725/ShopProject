@@ -4,7 +4,7 @@ namespace Shop.Core.Entities;
 
 public class Wallet:AbstractClass
 {
-    public int Id { get; set; }
+    public int? Id { get; set; }
     public string? CardHolderName { get; set; }
     public string? CardNumber { get; set; }
     public int? Balance { get; set; }
