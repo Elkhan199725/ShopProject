@@ -5,6 +5,15 @@ namespace Shop.Core.Entities;
 
 public class User:AbstractClass
 {
+    public User(string? name, string userName, string password, string email, string? phone)
+    {
+        Name = name;
+        UserName = userName;
+        Password = password;
+        Email = email;
+        Phone = phone;
+    }
+
     public int Id { get; set; }
     public string? Name { get; set; }
     public string UserName { get; set; } = null!;

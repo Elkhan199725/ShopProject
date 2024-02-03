@@ -31,9 +31,6 @@ public class AppDbContext : DbContext
             .HasKey(b => b.Id);
         modelBuilder.Entity<Discount>()
             .HasKey(d => d.Id);
-        modelBuilder.Entity<Admin>()
-           .HasKey(a => a.Id);
-
 
         modelBuilder.Entity<User>()
             .HasMany(u => u.DeliveryAddresses)
@@ -57,11 +54,7 @@ public class AppDbContext : DbContext
 
         modelBuilder.Entity<User>()
             .HasIndex(u => new { u.UserName, u.Email })
-            .IsUnique();   
-        
-        modelBuilder.Entity<Admin>()
-            .HasIndex(a => new { a.AdminName,a.AdminEmail })
-            .IsUnique();
+            .IsUnique();        
 
         modelBuilder.Entity<Wallet>()
             .HasMany(w=>w.Invoices)
@@ -75,7 +68,7 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<Product>()
             .HasMany(p => p.Baskets)
             .WithOne(b => b.Product)
-            .HasForeignKey(b => b.PropductId);
+            .HasForeignKey(b => b.ProductId);
 
         modelBuilder.Entity<Product>()
             .HasMany(p => p.InvoiceItems)
@@ -112,5 +105,4 @@ public class AppDbContext : DbContext
     public DbSet<Brand> Brands { get; set; } = null!;
     public DbSet<Category> Categories { get; set; } = null!;
     public DbSet<Discount> Discounts { get; set; } = null!;
-    public DbSet<Admin> Admins { get; set; } = null!;
 }

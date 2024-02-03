@@ -4,6 +4,15 @@ namespace Shop.Core.Entities;
 
 public class Wallet:AbstractClass
 {
+    public Wallet(string? cardHolderName, string? cardNumber, int? balance, User? user, ICollection<Invoice>? invoices)
+    {
+        CardHolderName = cardHolderName;
+        CardNumber = cardNumber;
+        Balance = balance;
+        User = user;
+        Invoices = invoices;
+    }
+
     public int? Id { get; set; }
     public string? CardHolderName { get; set; }
     public string? CardNumber { get; set; }

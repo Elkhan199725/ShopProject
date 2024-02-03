@@ -4,6 +4,14 @@ namespace Shop.Core.Entities;
 
 public class InvoiceItem:AbstractClass
 {
+    public InvoiceItem(int? quantity, decimal? price, Invoice? invoice, Product? product)
+    {
+        Quantity = quantity;
+        Price = price;
+        Invoice = invoice;
+        Product = product;
+    }
+
     public int Id { get; set; }
     public int? Quantity { get; set; }
     public decimal? Price { get; set; }
