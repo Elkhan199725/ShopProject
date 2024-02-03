@@ -4,6 +4,10 @@ namespace Shop.Core.Entities;
 
 public class Basket : AbstractClass
 {
+    public Basket()
+    {
+
+    }
     public Basket(int? quantity, User? user, Product? product)
     {
         Quantity = quantity;

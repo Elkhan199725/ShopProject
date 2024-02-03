@@ -3,8 +3,12 @@ using Shop.Core.Abstract;
 
 namespace Shop.Core.Entities;
 
-public class User:AbstractClass
+public class User : AbstractClass
 {
+    public User()
+    {
+    }
+
     public User(string? name, string userName, string password, string email, string? phone)
     {
         Name = name;

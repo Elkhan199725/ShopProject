@@ -2,8 +2,12 @@
 
 namespace Shop.Core.Entities;
 
-public class Discount:AbstractClass
+public class Discount : AbstractClass
 {
+    public Discount()
+    {
+    }
+
     public Discount(string? name, string? description, decimal? discountPercentage, DateTime? startDate, DateTime? endDate, ICollection<Product>? products)
     {
         Name = name;

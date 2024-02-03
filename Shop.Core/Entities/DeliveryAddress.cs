@@ -2,8 +2,12 @@
 
 namespace Shop.Core.Entities;
 
-public class DeliveryAddress:AbstractClass
+public class DeliveryAddress : AbstractClass
 {
+    public DeliveryAddress()
+    {
+    }
+
     public DeliveryAddress(string? address, string? postalCode, User? user)
     {
         Address = address;
@@ -11,7 +15,7 @@ public class DeliveryAddress:AbstractClass
         User = user;
     }
 
-    public int? Id { get; set;}
+    public int? Id { get; set; }
     public string? Address { get; set; } = null!;
     public string? PostalCode { get; set; }
     public User? User { get; set; }

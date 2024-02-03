@@ -2,8 +2,12 @@
 
 namespace Shop.Core.Entities;
 
-public class Invoice:AbstractClass
+public class Invoice : AbstractClass
 {
+    public Invoice()
+    {
+    }
+
     public Invoice(decimal? totalPrice, DateTime? invoiceDate, string? paymentMethod, User? user, Wallet? wallet, ICollection<InvoiceItem>? invoiceItems)
     {
         TotalPrice = totalPrice;

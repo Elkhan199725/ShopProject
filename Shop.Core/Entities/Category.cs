@@ -2,8 +2,12 @@
 
 namespace Shop.Core.Entities;
 
-public class Category:AbstractClass
+public class Category : AbstractClass
 {
+    public Category()
+    {
+    }
+
     public Category(string? name, ICollection<Product>? products)
     {
         Name = name;

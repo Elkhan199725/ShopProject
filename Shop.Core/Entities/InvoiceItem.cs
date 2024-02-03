@@ -2,8 +2,12 @@
 
 namespace Shop.Core.Entities;
 
-public class InvoiceItem:AbstractClass
+public class InvoiceItem : AbstractClass
 {
+    public InvoiceItem()
+    {
+    }
+
     public InvoiceItem(int? quantity, decimal? price, Invoice? invoice, Product? product)
     {
         Quantity = quantity;

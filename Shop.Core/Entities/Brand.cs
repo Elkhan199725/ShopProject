@@ -2,8 +2,13 @@
 
 namespace Shop.Core.Entities;
 
-public class Brand:AbstractClass
+public class Brand : AbstractClass
 {
+    public Brand()
+    {
+
+    }
+
     public Brand(string? name, ICollection<Product>? products)
     {
         Name = name;

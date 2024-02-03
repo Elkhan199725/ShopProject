@@ -2,8 +2,12 @@
 
 namespace Shop.Core.Entities;
 
-public class Wallet:AbstractClass
+public class Wallet : AbstractClass
 {
+    public Wallet()
+    {
+    }
+
     public Wallet(string? cardHolderName, string? cardNumber, int? balance, User? user, ICollection<Invoice>? invoices)
     {
         CardHolderName = cardHolderName;
