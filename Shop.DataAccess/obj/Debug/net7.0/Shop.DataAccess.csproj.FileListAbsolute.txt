@@ -56,3 +56,21 @@ C:\Users\elkhantma\Source\Repos\ShopProject\Shop.DataAccess\obj\Debug\net7.0\ref
 C:\Users\elkhantma\Source\Repos\ShopProject\Shop.DataAccess\obj\Debug\net7.0\Shop.DataAccess.pdb
 C:\Users\elkhantma\Source\Repos\ShopProject\Shop.DataAccess\obj\Debug\net7.0\Shop.DataAccess.genruntimeconfig.cache
 C:\Users\elkhantma\Source\Repos\ShopProject\Shop.DataAccess\obj\Debug\net7.0\ref\Shop.DataAccess.dll
+C:\Users\Elkhan Mammadli\source\repos\ShopProject\Shop.DataAccess\obj\Debug\net7.0\Shop.DataAccess.csproj.AssemblyReference.cache
+C:\Users\Elkhan Mammadli\source\repos\ShopProject\Shop.DataAccess\obj\Debug\net7.0\Shop.DataAccess.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Elkhan Mammadli\source\repos\ShopProject\Shop.DataAccess\obj\Debug\net7.0\Shop.DataAccess.AssemblyInfoInputs.cache
+C:\Users\Elkhan Mammadli\source\repos\ShopProject\Shop.DataAccess\obj\Debug\net7.0\Shop.DataAccess.AssemblyInfo.cs
+C:\Users\Elkhan Mammadli\source\repos\ShopProject\Shop.DataAccess\obj\Debug\net7.0\Shop.DataAccess.csproj.CoreCompileInputs.cache
+C:\Users\Elkhan Mammadli\source\repos\ShopProject\Shop.DataAccess\obj\Debug\net7.0\Shop.DataAccess.sourcelink.json
+C:\Users\Elkhan Mammadli\source\repos\ShopProject\Shop.DataAccess\bin\Debug\net7.0\Shop.DataAccess.deps.json
+C:\Users\Elkhan Mammadli\source\repos\ShopProject\Shop.DataAccess\bin\Debug\net7.0\Shop.DataAccess.runtimeconfig.json
+C:\Users\Elkhan Mammadli\source\repos\ShopProject\Shop.DataAccess\bin\Debug\net7.0\Shop.DataAccess.dll
+C:\Users\Elkhan Mammadli\source\repos\ShopProject\Shop.DataAccess\bin\Debug\net7.0\Shop.DataAccess.pdb
+C:\Users\Elkhan Mammadli\source\repos\ShopProject\Shop.DataAccess\bin\Debug\net7.0\Shop.Core.dll
+C:\Users\Elkhan Mammadli\source\repos\ShopProject\Shop.DataAccess\bin\Debug\net7.0\Shop.Core.pdb
+C:\Users\Elkhan Mammadli\source\repos\ShopProject\Shop.DataAccess\obj\Debug\net7.0\Shop.DataAccess.csproj.CopyComplete
+C:\Users\Elkhan Mammadli\source\repos\ShopProject\Shop.DataAccess\obj\Debug\net7.0\Shop.DataAccess.dll
+C:\Users\Elkhan Mammadli\source\repos\ShopProject\Shop.DataAccess\obj\Debug\net7.0\refint\Shop.DataAccess.dll
+C:\Users\Elkhan Mammadli\source\repos\ShopProject\Shop.DataAccess\obj\Debug\net7.0\Shop.DataAccess.pdb
+C:\Users\Elkhan Mammadli\source\repos\ShopProject\Shop.DataAccess\obj\Debug\net7.0\Shop.DataAccess.genruntimeconfig.cache
+C:\Users\Elkhan Mammadli\source\repos\ShopProject\Shop.DataAccess\obj\Debug\net7.0\ref\Shop.DataAccess.dll

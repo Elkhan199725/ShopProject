@@ -44,3 +44,21 @@ C:\Users\elkhantma\Source\Repos\ShopProject\Shop.Business\obj\Debug\net7.0\Shop.
 C:\Users\elkhantma\Source\Repos\ShopProject\Shop.Business\obj\Debug\net7.0\refint\Shop.Business.dll
 C:\Users\elkhantma\Source\Repos\ShopProject\Shop.Business\obj\Debug\net7.0\Shop.Business.pdb
 C:\Users\elkhantma\Source\Repos\ShopProject\Shop.Business\obj\Debug\net7.0\ref\Shop.Business.dll
+C:\Users\Elkhan Mammadli\source\repos\ShopProject\Shop.Business\obj\Debug\net7.0\Shop.Business.csproj.AssemblyReference.cache
+C:\Users\Elkhan Mammadli\source\repos\ShopProject\Shop.Business\obj\Debug\net7.0\Shop.Business.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Elkhan Mammadli\source\repos\ShopProject\Shop.Business\obj\Debug\net7.0\Shop.Business.AssemblyInfoInputs.cache
+C:\Users\Elkhan Mammadli\source\repos\ShopProject\Shop.Business\obj\Debug\net7.0\Shop.Business.AssemblyInfo.cs
+C:\Users\Elkhan Mammadli\source\repos\ShopProject\Shop.Business\obj\Debug\net7.0\Shop.Business.csproj.CoreCompileInputs.cache
+C:\Users\Elkhan Mammadli\source\repos\ShopProject\Shop.Business\obj\Debug\net7.0\Shop.Business.sourcelink.json
+C:\Users\Elkhan Mammadli\source\repos\ShopProject\Shop.Business\bin\Debug\net7.0\Shop.Business.deps.json
+C:\Users\Elkhan Mammadli\source\repos\ShopProject\Shop.Business\bin\Debug\net7.0\Shop.Business.dll
+C:\Users\Elkhan Mammadli\source\repos\ShopProject\Shop.Business\bin\Debug\net7.0\Shop.Business.pdb
+C:\Users\Elkhan Mammadli\source\repos\ShopProject\Shop.Business\bin\Debug\net7.0\Shop.Core.dll
+C:\Users\Elkhan Mammadli\source\repos\ShopProject\Shop.Business\bin\Debug\net7.0\Shop.Core.pdb
+C:\Users\Elkhan Mammadli\source\repos\ShopProject\Shop.Business\obj\Debug\net7.0\Shop.Business.csproj.CopyComplete
+C:\Users\Elkhan Mammadli\source\repos\ShopProject\Shop.Business\obj\Debug\net7.0\Shop.Business.dll
+C:\Users\Elkhan Mammadli\source\repos\ShopProject\Shop.Business\obj\Debug\net7.0\refint\Shop.Business.dll
+C:\Users\Elkhan Mammadli\source\repos\ShopProject\Shop.Business\obj\Debug\net7.0\Shop.Business.pdb
+C:\Users\Elkhan Mammadli\source\repos\ShopProject\Shop.Business\obj\Debug\net7.0\ref\Shop.Business.dll
+C:\Users\Elkhan Mammadli\source\repos\ShopProject\Shop.Business\bin\Debug\net7.0\Shop.DataAccess.dll
+C:\Users\Elkhan Mammadli\source\repos\ShopProject\Shop.Business\bin\Debug\net7.0\Shop.DataAccess.pdb
