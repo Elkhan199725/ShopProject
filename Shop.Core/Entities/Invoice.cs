@@ -6,7 +6,7 @@ public class Invoice : AbstractClass
 {
     public Invoice()
     {
-        InvoiceItems = new List<InvoiceItem>(); // Ensure collection is initialized
+        InvoiceItems = new List<InvoiceItem>();
     }
 
     public Invoice(decimal? totalPrice, DateTime? invoiceDate, string? paymentMethod, User? user, Wallet? wallet)
@@ -26,7 +26,6 @@ public class Invoice : AbstractClass
     public int? UserId { get; set; }
     public int? WalletId { get; set; }
 
-    // Navigation properties
     public User? User { get; set; }
     public Wallet? Wallet { get; set; }
     public ICollection<InvoiceItem> InvoiceItems { get; set; }
