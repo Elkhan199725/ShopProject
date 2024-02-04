@@ -11,6 +11,7 @@ public class User : AbstractClass
         Wallets = new List<Wallet>();
         Invoices = new List<Invoice>();
         Baskets = new List<Basket>();
+        Cards = new List<Card>();
     }
 
     public User(string? name, string userName, string password, string email, string? phone)
@@ -25,6 +26,7 @@ public class User : AbstractClass
         Wallets = new List<Wallet>();
         Invoices = new List<Invoice>();
         Baskets = new List<Basket>();
+        TransactionLogs = new List<TransactionLog>();
     }
 
     public int Id { get; set; }
@@ -37,4 +39,6 @@ public class User : AbstractClass
     public ICollection<Wallet>? Wallets { get; set; }
     public ICollection<Invoice>? Invoices { get; set; }
     public ICollection<Basket>? Baskets { get; set; }
+    public ICollection<Card>? Cards { get; set; }
+    public ICollection<TransactionLog> TransactionLogs { get; set; }
 }

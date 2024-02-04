@@ -6,23 +6,22 @@ public class Wallet : AbstractClass
 {
     public Wallet()
     {
+        Cards = new List<Card>();
         Invoices = new List<Invoice>();
     }
 
-    public Wallet(string? cardHolderName, string? cardNumber, int? balance, User? user)
+    public Wallet(decimal? balance, int? userId)
         : this()
     {
-        CardHolderName = cardHolderName;
-        CardNumber = cardNumber;
         Balance = balance;
-        User = user;
+        UserId = userId;
     }
 
     public int? Id { get; set; }
-    public string? CardHolderName { get; set; }
-    public string? CardNumber { get; set; }
     public decimal? Balance { get; set; }
     public int? UserId { get; set; }
+
     public User? User { get; set; }
+    public ICollection<Card> Cards { get; set; }
     public ICollection<Invoice> Invoices { get; set; }
 }

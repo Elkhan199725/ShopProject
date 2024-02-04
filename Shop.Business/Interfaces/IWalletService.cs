@@ -8,6 +8,6 @@ namespace Shop.Business.Interfaces;
 
 public interface IWalletService
 {
-    Task<int> GetWalletBalance(int userId);
-    Task UpdateWalletBalance(int userId, int newBalance);
+    Task<decimal> GetWalletBalance(int userId, string username, string password);
+    Task IncreaseWalletBalance(int userId, int cardId, decimal amount, int cvc, string username, string password);
 }

@@ -16,7 +16,7 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<DeliveryAddress>()
             .HasKey(da => da.Id);
         modelBuilder.Entity<Wallet>()
-            .HasKey(w => w.Id);        
+            .HasKey(w => w.Id);
         modelBuilder.Entity<Invoice>()
             .HasKey(i => i.Id);
         modelBuilder.Entity<Basket>()
@@ -31,6 +31,13 @@ public class AppDbContext : DbContext
             .HasKey(b => b.Id);
         modelBuilder.Entity<Discount>()
             .HasKey(d => d.Id);
+        modelBuilder.Entity<Card>()
+            .HasKey(c => c.Id);
+
+        modelBuilder.Entity<Card>()
+            .HasOne(c => c.Wallet)
+            .WithMany(w => w.Cards)
+            .HasForeignKey(c => c.WalletId);
 
         modelBuilder.Entity<User>()
             .HasMany(u => u.DeliveryAddresses)
@@ -53,16 +60,21 @@ public class AppDbContext : DbContext
             .HasForeignKey(b => b.UserId);
 
         modelBuilder.Entity<User>()
+             .HasMany(u => u.Cards)
+             .WithOne(c => c.User)
+             .HasForeignKey(c => c.UserId);
+
+        modelBuilder.Entity<User>()
             .HasIndex(u => new { u.UserName, u.Email })
-            .IsUnique();        
+            .IsUnique();
 
         modelBuilder.Entity<Wallet>()
-            .HasMany(w=>w.Invoices)
+            .HasMany(w => w.Invoices)
             .WithOne(i => i.Wallet)
             .HasForeignKey(i => i.WalletId);
 
-        modelBuilder.Entity<Wallet>()
-            .HasIndex(w => w.CardNumber)
+        modelBuilder.Entity<Card>()
+            .HasIndex(c => new { c.CardNumber, c.Cvc})
             .IsUnique();
 
         modelBuilder.Entity<Product>()
@@ -91,9 +103,18 @@ public class AppDbContext : DbContext
             .HasForeignKey(p => p.BrandId);
 
         modelBuilder.Entity<Discount>()
-            .HasMany(d=>d.Products)
+            .HasMany(d => d.Products)
             .WithOne(p => p.Discount)
-            .HasForeignKey(p=>p.DiscountId);
+            .HasForeignKey(p => p.DiscountId);
+        modelBuilder.Entity<TransactionLog>()
+            .HasOne(t => t.User)
+            .WithMany(u => u.TransactionLogs)
+            .HasForeignKey(t => t.UserId);
+
+        modelBuilder.Entity<TransactionLog>()
+            .HasOne(t => t.Card)
+            .WithMany(c => c.TransactionLogs)
+            .HasForeignKey(t => t.CardId);
     }
     public DbSet<Wallet> Wallets { get; set; } = null!;
     public DbSet<User> Users { get; set; } = null!;
@@ -105,4 +126,6 @@ public class AppDbContext : DbContext
     public DbSet<Brand> Brands { get; set; } = null!;
     public DbSet<Category> Categories { get; set; } = null!;
     public DbSet<Discount> Discounts { get; set; } = null!;
+    public DbSet<Card> Cards { get; set; } = null!;
+    public DbSet<TransactionLog>? TransactionLogs { get; set; }
 }
