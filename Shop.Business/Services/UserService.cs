@@ -3,10 +3,6 @@ using Shop.Business.Interfaces;
 using Shop.Business.Utilities.Exceptions;
 using Shop.Core.Entities;
 using Shop.DataAccess.Data_Access;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Shop.Business.Services
 {
@@ -19,7 +15,7 @@ namespace Shop.Business.Services
             _dbContext = dbContext;
         }
 
-        public async Task CreateUser(User? user, string? name, string? username, string? userEmail, string? userPassword, string? phoneNumber)
+        public async Task CreateUser(User user, string? name, string? username, string? userEmail, string? userPassword, string? phoneNumber)
         {
             if (String.IsNullOrEmpty(name) || String.IsNullOrEmpty(username) || String.IsNullOrEmpty(userEmail) || String.IsNullOrEmpty(userPassword))
                 throw new EmptyNameException("Name, username, email, and password cannot be null or empty");
@@ -33,6 +29,7 @@ namespace Shop.Business.Services
                 user.Email = userEmail;
                 user.Password = userPassword;
                 user.Phone = phoneNumber;
+                user.Created = DateTime.UtcNow;
 
                 await _dbContext.Users.AddAsync(user);
                 await _dbContext.SaveChangesAsync();
@@ -41,12 +38,14 @@ namespace Shop.Business.Services
                 Console.WriteLine($"User: {username} {userEmail} successfully created");
                 Console.ResetColor();
             }
+            
             else
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine($"User with email {userEmail} already exists");
                 Console.ResetColor();
             }
+            
         }
 
         public async Task DeleteUser(string? userEmail)
@@ -119,11 +118,15 @@ namespace Shop.Business.Services
 
             if (userToUpdate != null)
             {
+                DateTime? currentCreated = userToUpdate.Created;
+
                 userToUpdate.UserName = newUsername;
                 userToUpdate.Email = newEmail;
                 userToUpdate.Password = newPassword;
                 userToUpdate.Name = newName;
                 userToUpdate.Phone = newPhone;
+                userToUpdate.Updated = DateTime.UtcNow;
+                userToUpdate.Created = currentCreated;
 
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine($"User: {newUsername} {newEmail} successfully updated!");
@@ -134,6 +137,53 @@ namespace Shop.Business.Services
             else
             {
                 Console.WriteLine("User not found for the given email.");
+            }
+        }
+        public async Task ActivateUser(int userId)
+        {
+            var userToActivate = await _dbContext.Users.FindAsync(userId);
+
+            if (userToActivate != null)
+            {
+                DateTime? currentCreated = userToActivate.Created;
+
+                userToActivate.IsDeleted = false;
+                userToActivate.Updated = DateTime.UtcNow;
+                userToActivate.Created = currentCreated;
+
+                await _dbContext.SaveChangesAsync();
+
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine($"User with ID {userId} activated successfully.");
+                Console.ResetColor();
+            }
+            else
+            {
+                Console.WriteLine($"User with ID {userId} not found. Unable to activate.");
+            }
+        }
+
+        public async Task DeactivateUser(int userId)
+        {
+            var userToDeactivate = await _dbContext.Users.FindAsync(userId);
+
+            if (userToDeactivate != null)
+            {
+                DateTime? currentCreated = userToDeactivate.Created;
+
+                userToDeactivate.IsDeleted = true;
+                userToDeactivate.Updated = DateTime.UtcNow;
+                userToDeactivate.Created = currentCreated;
+
+                await _dbContext.SaveChangesAsync();
+
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine($"User with ID {userId} deactivated successfully.");
+                Console.ResetColor();
+            }
+            else
+            {
+                Console.WriteLine($"User with ID {userId} not found. Unable to deactivate.");
             }
         }
     }

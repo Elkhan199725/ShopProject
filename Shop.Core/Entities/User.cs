@@ -5,10 +5,17 @@ namespace Shop.Core.Entities;
 
 public class User : AbstractClass
 {
+    // Empty constructor for database
     public User()
     {
+        // Initialize collections
+        DeliveryAddresses = new List<DeliveryAddress>();
+        Wallets = new List<Wallet>();
+        Invoices = new List<Invoice>();
+        Baskets = new List<Basket>();
     }
 
+    // Constructor for creating a User with specified properties
     public User(string? name, string userName, string password, string email, string? phone)
     {
         Name = name;
@@ -16,6 +23,12 @@ public class User : AbstractClass
         Password = password;
         Email = email;
         Phone = phone;
+
+        // Initialize collections
+        DeliveryAddresses = new List<DeliveryAddress>();
+        Wallets = new List<Wallet>();
+        Invoices = new List<Invoice>();
+        Baskets = new List<Basket>();
     }
 
     public int Id { get; set; }
