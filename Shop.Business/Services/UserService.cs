@@ -1,195 +1,124 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Shop.Business.Interfaces;
-using Shop.Business.Utilities.Exceptions;
 using Shop.Core.Entities;
 using Shop.DataAccess.Data_Access;
+using Shop.DataAccess.Migrations;
 
-namespace Shop.Business.Services
+namespace Shop.Core.Services
 {
     public class UserService : IUserService
     {
-        private readonly AppDbContext _dbContext;
+        public readonly AppDbContext _context;
 
-        public UserService(AppDbContext dbContext)
+        public UserService(AppDbContext context)
         {
-            _dbContext = dbContext;
-        }
-
-        public async Task CreateUser(User user, string? name, string? username, string? userEmail, string? userPassword, string? phoneNumber)
-        {
-            if (String.IsNullOrEmpty(name) || String.IsNullOrEmpty(username) || String.IsNullOrEmpty(userEmail) || String.IsNullOrEmpty(userPassword))
-                throw new EmptyNameException("Name, username, email, and password cannot be null or empty");
-
-            var existingUser = await _dbContext.Users.FirstOrDefaultAsync(u => u.Email == userEmail);
-
-            if (existingUser == null)
-            {
-                user.Name = name;
-                user.UserName = username;
-                user.Email = userEmail;
-                user.Password = userPassword;
-                user.Phone = phoneNumber;
-                user.Created = DateTime.UtcNow;
-
-                await _dbContext.Users.AddAsync(user);
-                await _dbContext.SaveChangesAsync();
-
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine($"User: {username} {userEmail} successfully created");
-                Console.ResetColor();
-            }
-            
-            else
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine($"User with email {userEmail} already exists");
-                Console.ResetColor();
-            }
-            
-        }
-
-        public async Task DeleteUser(string? userEmail)
-        {
-            if (String.IsNullOrEmpty(userEmail))
-                throw new EmptyNameException("User email cannot be null or empty");
-
-            var userToDelete = await _dbContext.Users.SingleOrDefaultAsync(u => u.Email == userEmail);
-
-            if (userToDelete != null)
-            {
-                _dbContext.Users.Remove(userToDelete);
-                await _dbContext.SaveChangesAsync();
-
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine($"User with email {userEmail} successfully deleted");
-                Console.ResetColor();
-            }
-            else
-            {
-                Console.WriteLine("User not found for the given email. Deletion aborted.");
-            }
+            _context = context;
         }
 
         public async Task<List<User>> GetAllUsers()
         {
-            var allUsers = await _dbContext.Users.ToListAsync();
-
-            if (allUsers.Count > 0)
-            {
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine($"Total {allUsers.Count} users found");
-                Console.ResetColor();
-            }
-            else
-            {
-                Console.WriteLine("No users found in the database");
-            }
-
-            return allUsers;
+            return await _context.Users.Where(u => !u.IsDeleted).ToListAsync();
         }
 
-        public async Task<User?> GetUserByEmail(string? userEmail)
+        public async Task<User?> GetUserByEmail(string userEmail)
         {
-            if (String.IsNullOrEmpty(userEmail))
-                throw new EmptyNameException("User email cannot be null or empty");
+            return await _context.Users.FirstOrDefaultAsync(u => u.Email == userEmail && !u.IsDeleted);
+        }
 
-            var user = await _dbContext.Users.SingleOrDefaultAsync(u => u.Email == userEmail);
+        public async Task<User?> CreateUser(string name, string userName, string password, string email, string phone, bool isAdmin)
+        {
+            if (await _context.Users.AnyAsync(u => u.UserName == userName || u.Email == email))
+            {
+                return null; // User already exists
+            }
 
+            var user = new User
+            {
+                Name = name,
+                UserName = userName,
+                Password = password,
+                Email = email,
+                Phone = phone,
+                IsUserAdmin = isAdmin
+            };
+
+            _context.Users.Add(user);
+            await _context.SaveChangesAsync();
+            return user;
+        }
+
+        public async Task<User?> UpdateUser(int userId, string newUsername, string newEmail, string newPassword, string newName, string newPhone)
+        {
+            var user = await _context.Users.FindAsync(userId);
+            if (user == null || user.IsDeleted)
+            {
+                return null; // User not found or deleted
+            }
+            DateTime? dateTime = user.Created;
+            user.UserName = newUsername;
+            user.Email = newEmail;
+            user.Password = newPassword; // In a real application, ensure this is securely hashed
+            user.Name = newName;
+            user.Phone = newPhone;
+            user.Updated = DateTime.UtcNow; // Update the timestamp, but keep Created unchanged
+            user.Created = dateTime;
+
+            await _context.SaveChangesAsync();
+            return user;
+        }
+
+        public async Task<bool> DeleteUser(string userEmail)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == userEmail);
             if (user != null)
             {
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine($"User with email {userEmail} found");
-                Console.ResetColor();
-                return user;
+                _context.Users.Remove(user); // Perform the hard delete
+                await _context.SaveChangesAsync();
+                return true; // Indicate success
             }
-            else
-            {
-                Console.WriteLine($"User not found for the given email: {userEmail}");
-                return null;
-            }
+            return false; // User not found, indicate failure
         }
 
-        public async Task UpdateUser(string newUsername, string newEmail, string newPassword, string newName, string newPhone)
+        public async Task<bool> ActivateUser(int userId)
         {
-            if (String.IsNullOrEmpty(newUsername) || String.IsNullOrEmpty(newEmail) || String.IsNullOrEmpty(newPassword))
-                throw new EmptyNameException("Username, email, and password cannot be null or empty");
-
-            var userToUpdate = await _dbContext.Users.SingleOrDefaultAsync(u => u.Email == newEmail);
-
-            if (userToUpdate != null)
+            var user = await _context.Users.FindAsync(userId);
+            if (user != null && user.IsDeleted)
             {
-                DateTime? currentCreated = userToUpdate.Created;
-
-                userToUpdate.UserName = newUsername;
-                userToUpdate.Email = newEmail;
-                userToUpdate.Password = newPassword;
-                userToUpdate.Name = newName;
-                userToUpdate.Phone = newPhone;
-                userToUpdate.Updated = DateTime.UtcNow;
-                userToUpdate.Created = currentCreated;
-
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine($"User: {newUsername} {newEmail} successfully updated!");
-                Console.ResetColor();
-
-                await _dbContext.SaveChangesAsync();
+                user.IsDeleted = false;
+                await _context.SaveChangesAsync();
+                return true;
             }
-            else
-            {
-                Console.WriteLine("User not found for the given email.");
-            }
-        }
-        public async Task ActivateUser(int userId)
-        {
-            var userToActivate = await _dbContext.Users.FindAsync(userId);
-
-            if (userToActivate != null)
-            {
-                DateTime? currentCreated = userToActivate.Created;
-
-                userToActivate.IsDeleted = false;
-                userToActivate.Updated = DateTime.UtcNow;
-                userToActivate.Created = currentCreated;
-
-                await _dbContext.SaveChangesAsync();
-
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine($"User with ID {userId} activated successfully.");
-                Console.ResetColor();
-            }
-            else
-            {
-                Console.WriteLine($"User with ID {userId} not found. Unable to activate.");
-            }
+            return false;
         }
 
-        public async Task DeactivateUser(int userId)
+        public async Task<bool> DeactivateUser(int userId)
         {
-            var userToDeactivate = await _dbContext.Users.FindAsync(userId);
-
-            if (userToDeactivate != null)
+            var user = await _context.Users.FindAsync(userId);
+            if (user != null && !user.IsDeleted)
             {
-                DateTime? currentCreated = userToDeactivate.Created;
-
-                userToDeactivate.IsDeleted = true;
-                userToDeactivate.Updated = DateTime.UtcNow;
-                userToDeactivate.Created = currentCreated;
-
-                await _dbContext.SaveChangesAsync();
-
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine($"User with ID {userId} deactivated successfully.");
-                Console.ResetColor();
+                user.IsDeleted = true;
+                await _context.SaveChangesAsync();
+                return true;
             }
-            else
-            {
-                Console.WriteLine($"User with ID {userId} not found. Unable to deactivate.");
-            }
+            return false;
         }
 
-        public Task<bool> UserLogin(string usernameOrEmail, string password)
+        public async Task<bool> IsUserAdmin(string userName)
         {
-            throw new NotImplementedException();
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.UserName == userName && !u.IsDeleted);
+            return user != null && user.IsUserAdmin;
+        }
+        public async Task<bool> UserLogin(string usernameOrEmail, string password)
+        {
+            // Attempt to find a user by username or email. This assumes passwords are stored in plain text.
+            // In a real application, ensure passwords are securely hashed and compared.
+            var user = await _context.Users
+                .AsNoTracking()
+                .FirstOrDefaultAsync(u =>
+                    (u.UserName == usernameOrEmail || u.Email == usernameOrEmail) &&
+                    u.Password == password &&
+                    !u.IsDeleted);
+
+            return user != null;
         }
     }
 }

@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\elkhantma\\Desktop\\ShopProject\\Shop.Business\\Shop.Business.csproj": {}
+    "C:\\Users\\Elkhan Mammadli\\source\\repos\\ShopProject\\Shop.Business\\Shop.Business.csproj": {}
   },
   "projects": {
-    "C:\\Users\\elkhantma\\Desktop\\ShopProject\\Shop.Business\\Shop.Business.csproj": {
+    "C:\\Users\\Elkhan Mammadli\\source\\repos\\ShopProject\\Shop.Business\\Shop.Business.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\elkhantma\\Desktop\\ShopProject\\Shop.Business\\Shop.Business.csproj",
+        "projectUniqueName": "C:\\Users\\Elkhan Mammadli\\source\\repos\\ShopProject\\Shop.Business\\Shop.Business.csproj",
         "projectName": "Shop.Business",
-        "projectPath": "C:\\Users\\elkhantma\\Desktop\\ShopProject\\Shop.Business\\Shop.Business.csproj",
-        "packagesPath": "C:\\Users\\elkhantma\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\elkhantma\\Desktop\\ShopProject\\Shop.Business\\obj\\",
+        "projectPath": "C:\\Users\\Elkhan Mammadli\\source\\repos\\ShopProject\\Shop.Business\\Shop.Business.csproj",
+        "packagesPath": "C:\\Users\\Elkhan Mammadli\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Elkhan Mammadli\\source\\repos\\ShopProject\\Shop.Business\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\elkhantma\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Elkhan Mammadli\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -26,14 +26,15 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net7.0": {
             "targetAlias": "net7.0",
             "projectReferences": {
-              "C:\\Users\\elkhantma\\Desktop\\ShopProject\\Shop.DataAccess\\Shop.DataAccess.csproj": {
-                "projectPath": "C:\\Users\\elkhantma\\Desktop\\ShopProject\\Shop.DataAccess\\Shop.DataAccess.csproj"
+              "C:\\Users\\Elkhan Mammadli\\source\\repos\\ShopProject\\Shop.DataAccess\\Shop.DataAccess.csproj": {
+                "projectPath": "C:\\Users\\Elkhan Mammadli\\source\\repos\\ShopProject\\Shop.DataAccess\\Shop.DataAccess.csproj"
               }
             }
           }
@@ -51,6 +52,10 @@
             "Microsoft.EntityFrameworkCore": {
               "target": "Package",
               "version": "[6.0.26, )"
+            },
+            "Microsoft.Extensions.Identity.Core": {
+              "target": "Package",
+              "version": "[8.0.1, )"
             }
           },
           "imports": [
@@ -69,24 +74,24 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.302\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.101\\RuntimeIdentifierGraph.json"
         }
       }
     },
-    "C:\\Users\\elkhantma\\Desktop\\ShopProject\\Shop.Core\\Shop.Core.csproj": {
+    "C:\\Users\\Elkhan Mammadli\\source\\repos\\ShopProject\\Shop.Core\\Shop.Core.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\elkhantma\\Desktop\\ShopProject\\Shop.Core\\Shop.Core.csproj",
+        "projectUniqueName": "C:\\Users\\Elkhan Mammadli\\source\\repos\\ShopProject\\Shop.Core\\Shop.Core.csproj",
         "projectName": "Shop.Core",
-        "projectPath": "C:\\Users\\elkhantma\\Desktop\\ShopProject\\Shop.Core\\Shop.Core.csproj",
-        "packagesPath": "C:\\Users\\elkhantma\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\elkhantma\\Desktop\\ShopProject\\Shop.Core\\obj\\",
+        "projectPath": "C:\\Users\\Elkhan Mammadli\\source\\repos\\ShopProject\\Shop.Core\\Shop.Core.csproj",
+        "packagesPath": "C:\\Users\\Elkhan Mammadli\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Elkhan Mammadli\\source\\repos\\ShopProject\\Shop.Core\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\elkhantma\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Elkhan Mammadli\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -95,6 +100,7 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -134,24 +140,24 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.302\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.101\\RuntimeIdentifierGraph.json"
         }
       }
     },
-    "C:\\Users\\elkhantma\\Desktop\\ShopProject\\Shop.DataAccess\\Shop.DataAccess.csproj": {
+    "C:\\Users\\Elkhan Mammadli\\source\\repos\\ShopProject\\Shop.DataAccess\\Shop.DataAccess.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\elkhantma\\Desktop\\ShopProject\\Shop.DataAccess\\Shop.DataAccess.csproj",
+        "projectUniqueName": "C:\\Users\\Elkhan Mammadli\\source\\repos\\ShopProject\\Shop.DataAccess\\Shop.DataAccess.csproj",
         "projectName": "Shop.DataAccess",
-        "projectPath": "C:\\Users\\elkhantma\\Desktop\\ShopProject\\Shop.DataAccess\\Shop.DataAccess.csproj",
-        "packagesPath": "C:\\Users\\elkhantma\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\elkhantma\\Desktop\\ShopProject\\Shop.DataAccess\\obj\\",
+        "projectPath": "C:\\Users\\Elkhan Mammadli\\source\\repos\\ShopProject\\Shop.DataAccess\\Shop.DataAccess.csproj",
+        "packagesPath": "C:\\Users\\Elkhan Mammadli\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Elkhan Mammadli\\source\\repos\\ShopProject\\Shop.DataAccess\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\elkhantma\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Elkhan Mammadli\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -160,14 +166,15 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net7.0": {
             "targetAlias": "net7.0",
             "projectReferences": {
-              "C:\\Users\\elkhantma\\Desktop\\ShopProject\\Shop.Core\\Shop.Core.csproj": {
-                "projectPath": "C:\\Users\\elkhantma\\Desktop\\ShopProject\\Shop.Core\\Shop.Core.csproj"
+              "C:\\Users\\Elkhan Mammadli\\source\\repos\\ShopProject\\Shop.Core\\Shop.Core.csproj": {
+                "projectPath": "C:\\Users\\Elkhan Mammadli\\source\\repos\\ShopProject\\Shop.Core\\Shop.Core.csproj"
               }
             }
           }
@@ -213,7 +220,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.302\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.101\\RuntimeIdentifierGraph.json"
         }
       }
     }

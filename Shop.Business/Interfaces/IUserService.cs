@@ -1,15 +1,18 @@
 ﻿using Shop.Core.Entities;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
-namespace Shop.Business.Interfaces;
+namespace Shop.Core.Services;
 
 public interface IUserService
 {
     Task<List<User>> GetAllUsers();
-    Task<User> GetUserByEmail(string? userEmail);
-    Task CreateUser(User? user, string? name, string? username, string? userEmail, string? userPassword, string? phoneNumber);
-    Task UpdateUser(string name, string newUsername, string newUserEmail, string newUserPassword, string phoneNumber);
-    Task DeleteUser(string? userEmail);
-    Task ActivateUser(int userId);
-    Task DeactivateUser(int userId);
+    Task<User?> GetUserByEmail(string userEmail);
+    Task<User?> CreateUser(string name, string userName, string password, string email, string phone, bool isAdmin);
+    Task<User?> UpdateUser(int userId, string newUsername, string newEmail, string newPassword, string newName, string newPhone);
+    Task<bool> DeleteUser(string userEmail);
+    Task<bool> ActivateUser(int userId);
+    Task<bool> DeactivateUser(int userId);
+    Task<bool> IsUserAdmin(string userName);
     Task<bool> UserLogin(string usernameOrEmail, string password);
 }

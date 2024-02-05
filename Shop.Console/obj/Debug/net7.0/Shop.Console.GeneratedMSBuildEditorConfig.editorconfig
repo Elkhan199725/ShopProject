@@ -8,4 +8,6 @@ build_property.PlatformNeutralAssembly =
 build_property.EnforceExtendedAnalyzerRules = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = Shop.Console
-build_property.ProjectDir = C:\Users\elkhantma\Desktop\ShopProject\Shop.Console\
+build_property.ProjectDir = C:\Users\Elkhan Mammadli\source\repos\ShopProject\Shop.Console\
+build_property.EnableComHosting = 
+build_property.EnableGeneratedComInterfaceComImportInterop = 

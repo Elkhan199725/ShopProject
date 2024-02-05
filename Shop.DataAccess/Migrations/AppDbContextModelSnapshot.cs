@@ -410,10 +410,10 @@ namespace Shop.DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<bool?>("IsAdmin")
+                    b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("IsDeleted")
+                    b.Property<bool>("IsUserAdmin")
                         .HasColumnType("bit");
 
                     b.Property<string>("Name")

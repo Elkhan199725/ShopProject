@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Shop.Business.Utilities.Helpers;
 
-internal enum Menu
+internal enum AdminMenu
 {
     //User Service
     CreateUser =1,
@@ -16,6 +16,8 @@ internal enum Menu
     GetUserByEmail,
     ActivateUser,
     DeactivateUser,
+    IsUserAdmin,
+    UserLogin,
     //Card Service
     CreateCard,
     UpdateCard,

@@ -1,14 +1,7 @@
 {
   "ExpandedNodes": [
-    "",
-    "\\Shop.Business",
-    "\\Shop.Business\\bin",
-    "\\Shop.Business\\bin\\Debug",
-    "\\Shop.Business\\bin\\Release",
-    "\\Shop.Business\\Interfaces",
-    "\\Shop.Business\\Services",
-    "\\Shop.Business\\Utilities"
+    ""
   ],
-  "SelectedNode": "\\Shop.Business\\Interfaces\\IAdminServices.cs",
+  "SelectedNode": "\\ShopSolution.sln",
   "PreviewInSolutionExplorer": false
 }

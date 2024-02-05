@@ -7,7 +7,7 @@ public class AppDbContext : DbContext
 {
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseSqlServer(@"Server=TITAN03\SQLEXPRESS;Database=ShopProject;Trusted_Connection=true;TrustServerCertificate=True;");
+        optionsBuilder.UseSqlServer(@"Server=ELKHAN-HOME\SQLEXPRESS;Database=ShopProject;Trusted_Connection=true;TrustServerCertificate=True;");
     }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -128,4 +128,5 @@ public class AppDbContext : DbContext
     public DbSet<Discount> Discounts { get; set; } = null!;
     public DbSet<Card> Cards { get; set; } = null!;
     public DbSet<TransactionLog>? TransactionLogs { get; set; }
+
 }
