@@ -11,4 +11,5 @@ public interface IUserService
     Task DeleteUser(string? userEmail);
     Task ActivateUser(int userId);
     Task DeactivateUser(int userId);
+    Task<bool> UserLogin(string usernameOrEmail, string password);
 }

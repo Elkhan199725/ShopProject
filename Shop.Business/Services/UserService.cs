@@ -186,5 +186,10 @@ namespace Shop.Business.Services
                 Console.WriteLine($"User with ID {userId} not found. Unable to deactivate.");
             }
         }
+
+        public Task<bool> UserLogin(string usernameOrEmail, string password)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

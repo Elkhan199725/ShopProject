@@ -14,13 +14,14 @@ public class User : AbstractClass
         Cards = new List<Card>();
     }
 
-    public User(string? name, string userName, string password, string email, string? phone)
+    public User(string? name, string userName, string password, string email, string? phone, bool isAdmin)
     {
         Name = name;
         UserName = userName;
         Password = password;
         Email = email;
         Phone = phone;
+        IsAdmin = isAdmin;
 
         DeliveryAddresses = new List<DeliveryAddress>();
         Wallets = new List<Wallet>();
@@ -35,6 +36,7 @@ public class User : AbstractClass
     public string Password { get; set; } = null!;
     public string Email { get; set; } = null!;
     public string? Phone { get; set; }
+    public bool IsAdmin { get; set; } = false;
     public ICollection<DeliveryAddress>? DeliveryAddresses { get; set; }
     public ICollection<Wallet>? Wallets { get; set; }
     public ICollection<Invoice>? Invoices { get; set; }

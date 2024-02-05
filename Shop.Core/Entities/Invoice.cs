@@ -25,6 +25,7 @@ public class Invoice : AbstractClass
     public string? PaymentMethod { get; set; }
     public int? UserId { get; set; }
     public int? WalletId { get; set; }
+    public string? Status { get; set; } = "unpaid";
 
     public User? User { get; set; }
     public Wallet? Wallet { get; set; }
