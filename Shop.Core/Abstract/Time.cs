@@ -4,7 +4,7 @@ public abstract class AbstractClass
 {
     protected AbstractClass()
     {
-        Created = DateTime.Now;
+        Created = DateTime.UtcNow;
         Updated = null;
         IsDeleted = false;
     }

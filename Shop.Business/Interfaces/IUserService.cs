@@ -7,10 +7,10 @@ namespace Shop.Core.Services;
 public interface IUserService
 {
     Task<List<User>> GetAllUsers();
-    Task<User?> GetUserByEmail(string userEmail);
-    Task<User?> CreateUser(string name, string userName, string password, string email, string phone, bool isAdmin);
-    Task<User?> UpdateUser(int userId, string newUsername, string newEmail, string newPassword, string newName, string newPhone);
-    Task<bool> DeleteUser(string userEmail);
+    Task<User?> GetUserById(int userId);
+    Task<bool?> CreateUser(string name, string userName, string password, string email, string phone, bool isAdmin);
+    Task<bool?> UpdateUser(int userId, string newUsername, string newEmail, string newPassword, string newName, string newPhone);
+    Task<bool> DeleteUser(int userId);
     Task<bool> ActivateUser(int userId);
     Task<bool> DeactivateUser(int userId);
     Task<bool> IsUserAdmin(string userName);
