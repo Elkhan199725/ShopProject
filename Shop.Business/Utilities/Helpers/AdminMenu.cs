@@ -15,5 +15,13 @@ public enum AdminMenu
     GetUserById,
     ActivateUser,
     DeactivateUser,
+    CreateProduct,
+    UpdateProduct,
+    DeleteProduct,
+    ActivateProduct,
+    DeactivateProduct,
+    ProductExists,
+    GetAllProducts,
+    GetProductById,
     Logout
 }

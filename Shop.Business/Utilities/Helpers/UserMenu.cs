@@ -9,5 +9,8 @@ namespace Shop.Business.Utilities.Helpers;
 public enum UserMenu
 {
     GetUserById = 1,
+    ProductExists,
+    GetAllProducts,
+    GetProductById,
     Logout
 }

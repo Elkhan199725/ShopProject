@@ -11,8 +11,10 @@ public interface IProductService
 {
     Task<Product> GetProductById(int productId);
     Task<List<Product>> GetAllProducts();
-    Task CreateProduct(string name, string description, decimal price, int quantityAvailable, int categoryId, int brandId, int? discountId);
-    Task UpdateProduct(int productId, string name, string description, decimal price, int quantityAvailable);
-    Task DeleteProduct(int productId);
+    Task<bool> CreateProduct(string name, string description, decimal price, int quantityAvailable, int categoryId, int brandId, int? discountId);
+    Task<bool> UpdateProduct(int productId, string? newName, string? newDescription, decimal? newPrice, int? newQuantityAvailable, int? newCategoryId, int? newBrandId, int? newDiscountId);
+    Task<bool> DeleteProduct(int productId);
+    Task<bool> ActivateProduct(int productId);
+    Task<bool> DeactivateProduct(int productId);
     Task<bool> ProductExists(int productId);
 }

@@ -2,6 +2,7 @@
 
 using FluentAssertions.Common;
 using Microsoft.EntityFrameworkCore;
+using Shop.Business.Services;
 using Shop.Business.Utilities.Helpers;
 using Shop.Core.Entities;
 using Shop.Core.Services;
@@ -14,6 +15,7 @@ Console.SetCursorPosition((Console.WindowWidth - s.Length) / 2, Console.CursorTo
 Console.WriteLine(s);
 
 UserService userService = new UserService(new AppDbContext());
+ProductService productService = new ProductService(new AppDbContext());
 
 bool appRun = true;
 while (appRun)
@@ -37,12 +39,12 @@ while (appRun)
             if (isAdmin)
             {
                 // Admin panel logic here
-                await AdminPanel(userService);
+                await AdminPanel(userService, productService);
             }
             else
             {
                 // User panel logic here
-                await UserPanel(userService);
+                await UserPanel(userService, productService);
             }
         }
     }
@@ -93,7 +95,7 @@ static string ReadPassword()
     return password;
 }
 
-static async Task AdminPanel(UserService userService)
+static async Task AdminPanel(UserService userService, ProductService productService)
 {
     bool adminSession = true;
     while (adminSession)
@@ -106,7 +108,15 @@ static async Task AdminPanel(UserService userService)
         Console.WriteLine("5) Get User By Id");
         Console.WriteLine("6) Activate User");
         Console.WriteLine("7) Deactivate User");
-        Console.WriteLine("8) Logout");
+        Console.WriteLine("8) Create Product");
+        Console.WriteLine("9) Update Product");
+        Console.WriteLine("10) Delete Product");
+        Console.WriteLine("11) Activate Product");
+        Console.WriteLine("12) Deactivate Product");
+        Console.WriteLine("13) Check if Product Exists");
+        Console.WriteLine("14) Get All Products");
+        Console.WriteLine("15) Get Product By Id");
+        Console.WriteLine("16) Logout");
         Console.Write("Choose an option: ");
         var input = Console.ReadLine();
         if (int.TryParse(input, out int choice) && Enum.IsDefined(typeof(AdminMenu), choice))
@@ -287,6 +297,246 @@ static async Task AdminPanel(UserService userService)
                         Console.WriteLine("Invalid input. Please enter a valid user ID.");
                     }
                     break;
+                case AdminMenu.CreateProduct:
+                    Console.Write("Enter product name: ");
+                    var productName = Console.ReadLine();
+                    Console.Write("Enter product description: ");
+                    var productDescription = Console.ReadLine();
+                    Console.Write("Enter product price: ");
+                    if (!decimal.TryParse(Console.ReadLine(), out decimal productPrice))
+                    {
+                        Console.WriteLine("Invalid price format. Please enter a valid decimal.");
+                        break;
+                    }
+                    Console.Write("Enter quantity available: ");
+                    if (!int.TryParse(Console.ReadLine(), out int productQuantity))
+                    {
+                        Console.WriteLine("Invalid quantity format. Please enter a valid integer.");
+                        break;
+                    }
+                    Console.Write("Enter category ID: ");
+                    if (!int.TryParse(Console.ReadLine(), out int productCategoryId))
+                    {
+                        Console.WriteLine("Invalid category ID format. Please enter a valid integer.");
+                        break;
+                    }
+                    Console.Write("Enter brand ID: ");
+                    if (!int.TryParse(Console.ReadLine(), out int productBrandId))
+                    {
+                        Console.WriteLine("Invalid brand ID format. Please enter a valid integer.");
+                        break;
+                    }
+                    Console.Write("Enter discount ID (leave blank if none): ");
+                    if (!int.TryParse(Console.ReadLine(), out int productDiscountId))
+                    {
+                        productDiscountId = 0; // Set discount to 0 if not provided
+                    }
+
+                    try
+                    {
+                        await productService.CreateProduct(productName, productDescription, productPrice, productQuantity, productCategoryId, productBrandId, productDiscountId);
+                        Console.WriteLine("Product created successfully.");
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Error: {ex.Message}");
+                    }
+                    break;
+
+                case AdminMenu.UpdateProduct:
+                    Console.Write("Enter the product ID to update: ");
+                    if (int.TryParse(Console.ReadLine(), out int productId))
+                    {
+                        Console.Write("Enter new product name (leave blank to keep unchanged): ");
+                        var newName = Console.ReadLine();
+                        Console.Write("Enter new product description (leave blank to keep unchanged): ");
+                        var newDescription = Console.ReadLine();
+
+                        Console.Write("Enter new product price (leave blank to keep unchanged): ");
+                        var priceInput = Console.ReadLine();
+                        decimal? newPrice = !string.IsNullOrWhiteSpace(priceInput) ? decimal.Parse(priceInput) : (decimal?)null;
+
+                        Console.Write("Enter new product quantity available (leave blank to keep unchanged): ");
+                        var quantityInput = Console.ReadLine();
+                        int? newQuantityAvailable = !string.IsNullOrWhiteSpace(quantityInput) ? int.Parse(quantityInput) : (int?)null;
+
+                        Console.Write("Enter new product category ID (leave blank to keep unchanged): ");
+                        var categoryIdInput = Console.ReadLine();
+                        int? newCategoryId = !string.IsNullOrWhiteSpace(categoryIdInput) ? int.Parse(categoryIdInput) : (int?)null;
+
+                        Console.Write("Enter new product brand ID (leave blank to keep unchanged): ");
+                        var brandIdInput = Console.ReadLine();
+                        int? newBrandId = !string.IsNullOrWhiteSpace(brandIdInput) ? int.Parse(brandIdInput) : (int?)null;
+
+                        Console.Write("Enter new product discount ID (leave blank to keep unchanged): ");
+                        var discountIdInput = Console.ReadLine();
+                        int? newDiscountId = !string.IsNullOrWhiteSpace(discountIdInput) ? int.Parse(discountIdInput) : (int?)null;
+
+                        var updateResult = await productService.UpdateProduct(productId, newName, newDescription, newPrice, newQuantityAvailable, newCategoryId, newBrandId, newDiscountId);
+
+                        if (updateResult == true)
+                        {
+                            Console.WriteLine("Product updated successfully.");
+                        }
+                        else
+                        {
+                            Console.WriteLine("Failed to update product or product not found.");
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid product ID.");
+                    }
+                    break;
+
+                case AdminMenu.DeleteProduct:
+                    Console.Write("Enter the product ID to delete: ");
+                    if (int.TryParse(Console.ReadLine(), out int productToDeleteId))
+                    {
+                        // Confirmation before deletion
+                        Console.Write($"Are you sure you want to permanently delete the product with ID {productToDeleteId}? (yes/no): ");
+                        var productDeleteConfirmation = Console.ReadLine();
+                        if (productDeleteConfirmation.Equals("yes", StringComparison.OrdinalIgnoreCase))
+                        {
+                            var productExists = await productService.ProductExists(productToDeleteId);
+                            if (productExists)
+                            {
+                                await productService.DeleteProduct(productToDeleteId);
+                                Console.WriteLine("Product deleted successfully.");
+                            }
+                            else
+                            {
+                                Console.WriteLine("Product not found.");
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("Deletion cancelled.");
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid product ID.");
+                    }
+                    break;
+
+                case AdminMenu.ActivateProduct:
+                    Console.Write("Enter the product ID to activate: ");
+                    if (int.TryParse(Console.ReadLine(), out int activateProductId))
+                    {
+                        var activateResult = await productService.ActivateProduct(activateProductId);
+                        if (activateResult)
+                        {
+                            Console.WriteLine("Product activated successfully.");
+                        }
+                        else
+                        {
+                            Console.WriteLine("Failed to activate product or product not found.");
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid product ID.");
+                    }
+                    break;
+
+                case AdminMenu.DeactivateProduct:
+                    Console.Write("Enter the product ID to deactivate: ");
+                    if (int.TryParse(Console.ReadLine(), out int deactivateProductId))
+                    {
+                        var deactivateResult = await productService.DeactivateProduct(deactivateProductId);
+                        if (deactivateResult)
+                        {
+                            Console.WriteLine("Product deactivated successfully.");
+                        }
+                        else
+                        {
+                            Console.WriteLine("Failed to deactivate product or product not found.");
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid product ID.");
+                    }
+                    break;
+
+                case AdminMenu.ProductExists:
+                    Console.Write("Enter the product ID to check if it exists: ");
+                    if (int.TryParse(Console.ReadLine(), out int productIdToCheck))
+                    {
+                        var productExists = await productService.ProductExists(productIdToCheck);
+                        if (productExists)
+                        {
+                            Console.WriteLine("Product exists.");
+                        }
+                        else
+                        {
+                            Console.WriteLine("Product not found.");
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid product ID.");
+                    }
+                    break;
+
+                case AdminMenu.GetAllProducts:
+                    try
+                    {
+                        var allProducts = await productService.GetAllProducts();
+
+                        Console.WriteLine("\n--- All Products ---");
+                        foreach (var product in allProducts)
+                        {
+                            Console.WriteLine($"ID: {product.Id}");
+                            Console.WriteLine($"Name: {product.Name}");
+                            Console.WriteLine($"Description: {product.Description}");
+                            Console.WriteLine($"Price: {product.Price:C}");
+                            Console.WriteLine($"Quantity Available: {product.QuantityAvailable}");
+                            Console.WriteLine($"Category ID: {product.CategoryId}");
+                            Console.WriteLine($"Brand ID: {product.BrandId}");
+                            Console.WriteLine($"Discount ID: {product.DiscountId}");
+                            Console.WriteLine($"Created: {product.Created}");
+                            Console.WriteLine($"Updated: {product.Updated}");
+                            Console.WriteLine("---------------------------------");
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"An error occurred while getting all products: {ex.Message}");
+                    }
+                    break;
+
+                case AdminMenu.GetProductById:
+                    Console.Write("Enter the product ID to retrieve: ");
+                    if (int.TryParse(Console.ReadLine(), out int productIdToRetrieve))
+                    {
+                        try
+                        {
+                            var product = await productService.GetProductById(productIdToRetrieve);
+
+                            Console.WriteLine("\n--- Product Details ---");
+                            Console.WriteLine($"ID: {product.Id}");
+                            Console.WriteLine($"Name: {product.Name}");
+                            Console.WriteLine($"Description: {product.Description}");
+                            Console.WriteLine($"Price: {product.Price:C}");
+                            Console.WriteLine($"Quantity Available: {product.QuantityAvailable}");
+                            Console.WriteLine($"Category ID: {product.CategoryId}");
+                            Console.WriteLine($"Brand ID: {product.BrandId}");
+                            Console.WriteLine($"Discount ID: {product.DiscountId}");
+                            Console.WriteLine($"Created: {product.Created}");
+                            Console.WriteLine($"Updated: {product.Updated}");
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine($"An error occurred while retrieving the product: {ex.Message}");
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid product ID.");
+                    }
+                    break;
 
                 case AdminMenu.Logout:
                     adminSession = false;
@@ -304,14 +554,17 @@ static async Task AdminPanel(UserService userService)
         }
     }
 }
-static async Task UserPanel(UserService userService)
+static async Task UserPanel(UserService userService, ProductService productService)
 {
     bool userSession = true;
     while (userSession)
     {
         Console.WriteLine("\n--- User Panel ---");
         Console.WriteLine("1) Get User By Id");
-        Console.WriteLine("2) Logout");
+        Console.WriteLine("2) Check Product Existence");
+        Console.WriteLine("3) Get All Products");
+        Console.WriteLine("4) Get Product By Id");
+        Console.WriteLine("5) Logout");
         Console.Write("Choose an option: ");
         var input = Console.ReadLine();
         if (int.TryParse(input, out int choice) && Enum.IsDefined(typeof(UserMenu), choice))
@@ -319,23 +572,90 @@ static async Task UserPanel(UserService userService)
             switch ((UserMenu)choice)
             {
                 case UserMenu.GetUserById:
-                    Console.Write("Enter the ID of the user to retrieve: ");
-                    if (int.TryParse(Console.ReadLine(), out int userId))
+                    Console.Write("Enter your user ID to retrieve your information: ");
+                    if (int.TryParse(Console.ReadLine(), out int userIdToRetrieve))
                     {
-                        var user = await userService.GetUserById(userId);
+                        try
+                        {
+                            var user = await userService.GetUserById(userIdToRetrieve);
 
-                        if (user != null)
-                        {
-                            Console.WriteLine($"User found: {user.Name}, {user.Email}, {user.Phone}");
+                            Console.WriteLine("\n--- User Details ---");
+                            Console.WriteLine($"ID: {user.Id}");
+                            Console.WriteLine($"Username: {user.UserName}");
+                            Console.WriteLine($"Email: {user.Email}");
+                            Console.WriteLine($"Name: {user.Name}");
+                            Console.WriteLine($"Phone: {user.Phone}");
                         }
-                        else
+                        catch (Exception ex)
                         {
-                            Console.WriteLine("User not found.");
+                            Console.WriteLine($"An error occurred while retrieving user information: {ex.Message}");
                         }
                     }
                     else
                     {
-                        Console.WriteLine("Invalid input. Please enter a valid user ID.");
+                        Console.WriteLine("Invalid user ID.");
+                    }
+                    break;
+
+                case UserMenu.ProductExists:
+                    Console.Write("Enter the product ID to check if it exists: ");
+                    if (int.TryParse(Console.ReadLine(), out int productIdToCheck))
+                    {
+                        var productExists = await productService.ProductExists(productIdToCheck);
+                        if (productExists)
+                        {
+                            Console.WriteLine("Product exists.");
+                        }
+                        else
+                        {
+                            Console.WriteLine("Product not found.");
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid product ID.");
+                    }
+                    break;
+
+                case UserMenu.GetAllProducts:
+                    try
+                    {
+                        var products = await productService.GetAllProducts();
+                        Console.WriteLine("\n--- All Products ---");
+                        foreach (var product in products)
+                        {
+                            Console.WriteLine($"ID: {product.Id}, Name: {product.Name}, Price: {product.Price:C}");
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"An error occurred while retrieving products: {ex.Message}");
+                    }
+                    break;
+
+                case UserMenu.GetProductById:
+                    Console.Write("Enter the product ID to retrieve: ");
+                    if (int.TryParse(Console.ReadLine(), out int productIdToRetrieve))
+                    {
+                        try
+                        {
+                            var product = await productService.GetProductById(productIdToRetrieve);
+
+                            Console.WriteLine("\n--- Product Details ---");
+                            Console.WriteLine($"ID: {product.Id}");
+                            Console.WriteLine($"Name: {product.Name}");
+                            Console.WriteLine($"Description: {product.Description}");
+                            Console.WriteLine($"Price: {product.Price:C}");
+                            Console.WriteLine($"Quantity Available: {product.QuantityAvailable}");
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine($"An error occurred while retrieving the product: {ex.Message}");
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid product ID.");
                     }
                     break;
 

@@ -44,27 +44,25 @@ public class ProductService : IProductService
         return products;
     }
 
-    public async Task CreateProduct(string name, string description, decimal price, int quantityAvailable, int categoryId, int brandId, int? discountId)
+    public async Task<bool> CreateProduct(string name, string description, decimal price, int quantityAvailable, int categoryId, int brandId, int? discountId)
     {
         var categoryExists = await _dbContext.Categories.AnyAsync(c => c.Id == categoryId);
+        var brandExists = await _dbContext.Brands.AnyAsync(b => b.Id == brandId);
+        var discountExists = discountId == null || await _dbContext.Discounts.AnyAsync(d => d.Id == discountId.Value);
+
         if (!categoryExists)
         {
             throw new NotFoundException($"Category with ID {categoryId} not found.");
         }
 
-        var brandExists = await _dbContext.Brands.AnyAsync(b => b.Id == brandId);
         if (!brandExists)
         {
             throw new NotFoundException($"Brand with ID {brandId} not found.");
         }
 
-        if (discountId.HasValue)
+        if (!discountExists)
         {
-            var discountExists = await _dbContext.Discounts.AnyAsync(d => d.Id == discountId.Value);
-            if (!discountExists)
-            {
-                throw new NotFoundException($"Discount with ID {discountId.Value} not found.");
-            }
+            throw new NotFoundException($"Discount with ID {discountId} not found.");
         }
 
         var product = new Product
@@ -80,9 +78,11 @@ public class ProductService : IProductService
 
         await _dbContext.Products.AddAsync(product);
         await _dbContext.SaveChangesAsync();
+
+        return true;
     }
 
-    public async Task UpdateProduct(int productId, string name, string description, decimal price, int quantityAvailable)
+    public async Task<bool> UpdateProduct(int productId, string? newName, string? newDescription, decimal? newPrice, int? newQuantityAvailable, int? newCategoryId, int? newBrandId, int? newDiscountId)
     {
         var existingProduct = await _dbContext.Products.FindAsync(productId);
 
@@ -90,19 +90,68 @@ public class ProductService : IProductService
         {
             var createdTime = existingProduct.Created;
 
-            existingProduct.Name = name;
-            existingProduct.Description = description;
-            existingProduct.Price = price;
-            existingProduct.QuantityAvailable = quantityAvailable;
+            if (!string.IsNullOrWhiteSpace(newName))
+            {
+                existingProduct.Name = newName;
+            }
+
+            if (!string.IsNullOrWhiteSpace(newDescription))
+            {
+                existingProduct.Description = newDescription;
+            }
+
+            if (newPrice.HasValue)
+            {
+                existingProduct.Price = newPrice.Value;
+            }
+
+            if (newQuantityAvailable.HasValue)
+            {
+                existingProduct.QuantityAvailable = newQuantityAvailable.Value;
+            }
+
+            if (newCategoryId.HasValue)
+            {
+                var categoryExists = await _dbContext.Categories.AnyAsync(c => c.Id == newCategoryId.Value);
+                if (!categoryExists)
+                {
+                    throw new NotFoundException($"Category with ID {newCategoryId.Value} not found.");
+                }
+                existingProduct.CategoryId = newCategoryId.Value;
+            }
+
+            if (newBrandId.HasValue)
+            {
+                var brandExists = await _dbContext.Brands.AnyAsync(b => b.Id == newBrandId.Value);
+                if (!brandExists)
+                {
+                    throw new NotFoundException($"Brand with ID {newBrandId.Value} not found.");
+                }
+                existingProduct.BrandId = newBrandId.Value;
+            }
+
+            if (newDiscountId.HasValue)
+            {
+                var discountExists = await _dbContext.Discounts.AnyAsync(d => d.Id == newDiscountId.Value);
+                if (!discountExists)
+                {
+                    throw new NotFoundException($"Discount with ID {newDiscountId.Value} not found.");
+                }
+                existingProduct.DiscountId = newDiscountId.Value;
+            }
 
             existingProduct.Created = createdTime;
             existingProduct.Updated = DateTime.UtcNow;
 
             await _dbContext.SaveChangesAsync();
+
+            return true;
         }
+
+        return false; // Product not found
     }
 
-    public async Task DeleteProduct(int productId)
+    public async Task<bool> DeleteProduct(int productId)
     {
         var productToDelete = await _dbContext.Products.FindAsync(productId);
 
@@ -110,11 +159,43 @@ public class ProductService : IProductService
         {
             _dbContext.Products.Remove(productToDelete);
             await _dbContext.SaveChangesAsync();
+
+            return true;
         }
+        else
+        {
+            throw new NotFoundException($"Product with ID {productId} not found.");
+        }
+    }
+
+    public async Task<bool> ActivateProduct(int productId)
+    {
+        var product = await _dbContext.Products.FindAsync(productId);
+        if (product != null && product.IsDeleted)
+        {
+            product.IsDeleted = false;
+            await _dbContext.SaveChangesAsync();
+            return true;
+        }
+        return false;
+    }
+
+    public async Task<bool> DeactivateProduct(int productId)
+    {
+        var product = await _dbContext.Products.FindAsync(productId);
+        if (product != null && !product.IsDeleted)
+        {
+            product.IsDeleted = true;
+            await _dbContext.SaveChangesAsync();
+            return true;
+        }
+        return false;
     }
 
     public async Task<bool> ProductExists(int productId)
     {
         return await _dbContext.Products.AnyAsync(p => p.Id == productId);
     }
+
+
 }
