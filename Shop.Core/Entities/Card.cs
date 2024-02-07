@@ -23,15 +23,15 @@ public class Card : AbstractClass
         WalletId = walletId;
     }
 
-    public int Id { get; set; }
+    public int? Id { get; set; }
     public string? CardNumber { get; set; } = null!;
     public string? CardHolderName { get; set; } = null!;
-    public int Cvc { get; set; }
+    public int? Cvc { get; set; }
     public decimal Balance { get; set; }
-
     public int? UserId { get; set; }
     public User? User { get; set; }
-
+    public int? InvoiceId { get; set; }
+    public Invoice? Invoice { get; set; }
     public int? WalletId { get; set; }
     public Wallet? Wallet { get; set; }
     public ICollection<TransactionLog> TransactionLogs { get; set; }

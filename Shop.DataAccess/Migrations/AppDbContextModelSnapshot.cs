@@ -102,7 +102,10 @@ namespace Shop.DataAccess.Migrations
                     b.Property<DateTime?>("Created")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("Cvc")
+                    b.Property<int?>("Cvc")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("InvoiceId")
                         .HasColumnType("int");
 
                     b.Property<bool>("IsDeleted")
@@ -119,13 +122,15 @@ namespace Shop.DataAccess.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("InvoiceId");
+
                     b.HasIndex("UserId");
 
                     b.HasIndex("WalletId");
 
                     b.HasIndex("CardNumber", "Cvc")
                         .IsUnique()
-                        .HasFilter("[CardNumber] IS NOT NULL");
+                        .HasFilter("[CardNumber] IS NOT NULL AND [Cvc] IS NOT NULL");
 
                     b.ToTable("Cards");
                 });
@@ -243,14 +248,8 @@ namespace Shop.DataAccess.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<string>("PaymentMethod")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Status")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal?>("TotalPrice")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("Updated")
                         .HasColumnType("datetime2");
@@ -272,11 +271,11 @@ namespace Shop.DataAccess.Migrations
 
             modelBuilder.Entity("Shop.Core.Entities.InvoiceItem", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int?>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int?>("Id"), 1L, 1);
 
                     b.Property<DateTime?>("Created")
                         .HasColumnType("datetime2");
@@ -287,14 +286,14 @@ namespace Shop.DataAccess.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<decimal?>("Price")
-                        .HasColumnType("decimal(18,2)");
-
                     b.Property<int?>("ProductId")
                         .HasColumnType("int");
 
                     b.Property<int?>("Quantity")
                         .HasColumnType("int");
+
+                    b.Property<decimal?>("TotalPrice")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime?>("Updated")
                         .HasColumnType("datetime2");
@@ -410,6 +409,9 @@ namespace Shop.DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<int?>("InvoiceId")
+                        .HasColumnType("int");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
@@ -434,6 +436,8 @@ namespace Shop.DataAccess.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("InvoiceId");
 
                     b.HasIndex("UserName", "Email")
                         .IsUnique();
@@ -488,6 +492,10 @@ namespace Shop.DataAccess.Migrations
 
             modelBuilder.Entity("Shop.Core.Entities.Card", b =>
                 {
+                    b.HasOne("Shop.Core.Entities.Invoice", "Invoice")
+                        .WithMany("Cards")
+                        .HasForeignKey("InvoiceId");
+
                     b.HasOne("Shop.Core.Entities.User", "User")
                         .WithMany("Cards")
                         .HasForeignKey("UserId");
@@ -495,6 +503,8 @@ namespace Shop.DataAccess.Migrations
                     b.HasOne("Shop.Core.Entities.Wallet", "Wallet")
                         .WithMany("Cards")
                         .HasForeignKey("WalletId");
+
+                    b.Navigation("Invoice");
 
                     b.Navigation("User");
 
@@ -518,13 +528,11 @@ namespace Shop.DataAccess.Migrations
                         .WithMany("Invoices")
                         .HasForeignKey("UserId");
 
-                    b.HasOne("Shop.Core.Entities.Wallet", "Wallet")
+                    b.HasOne("Shop.Core.Entities.Wallet", null)
                         .WithMany("Invoices")
                         .HasForeignKey("WalletId");
 
                     b.Navigation("User");
-
-                    b.Navigation("Wallet");
                 });
 
             modelBuilder.Entity("Shop.Core.Entities.InvoiceItem", b =>
@@ -578,6 +586,13 @@ namespace Shop.DataAccess.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Shop.Core.Entities.User", b =>
+                {
+                    b.HasOne("Shop.Core.Entities.Invoice", null)
+                        .WithMany("Users")
+                        .HasForeignKey("InvoiceId");
+                });
+
             modelBuilder.Entity("Shop.Core.Entities.Wallet", b =>
                 {
                     b.HasOne("Shop.Core.Entities.User", "User")
@@ -609,7 +624,11 @@ namespace Shop.DataAccess.Migrations
 
             modelBuilder.Entity("Shop.Core.Entities.Invoice", b =>
                 {
+                    b.Navigation("Cards");
+
                     b.Navigation("InvoiceItems");
+
+                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("Shop.Core.Entities.Product", b =>

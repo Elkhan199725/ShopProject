@@ -15,4 +15,5 @@ public interface IUserService
     Task<bool> DeactivateUser(int userId);
     Task<bool> IsUserAdmin(string userName);
     Task<bool> UserLogin(string usernameOrEmail, string password);
+    Task<bool> RegisterUser(string username, string email, string password);
 }

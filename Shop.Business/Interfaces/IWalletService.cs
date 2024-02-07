@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Shop.Core.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,11 @@ namespace Shop.Business.Interfaces;
 
 public interface IWalletService
 {
-    Task<decimal> GetWalletBalance(int userId, string username, string password);
-    Task IncreaseWalletBalance(int userId, int cardId, decimal amount, int cvc, string username, string password);
+    Task<Wallet> GetWalletById(int walletId);
+    Task<List<Wallet>> GetAllWallets();
+    Task<bool> CreateWallet(Wallet newWallet, int userId);
+    Task<bool> UpdateWallet(int walletId, int userId);
+    Task<bool> DeleteWallet(int walletId);
+    Task<decimal> GetWalletBalance(int userId);
+    Task IncreaseWalletBalance(int walletId, int cardId, decimal amount);
 }

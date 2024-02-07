@@ -9,5 +9,6 @@ namespace Shop.Business.Utilities.Helpers;
 public enum LogMenu
 {
     Login = 1,
+    Register,
     Logout,
 }

@@ -11,8 +11,8 @@ public interface ICardService
 {
     Task<Card> GetCardById(int cardId);
     Task<List<Card>> GetAllCards();
-    Task CreateCard(int userId, string cardNumber, string cardHolderName, int cvc);
-    Task UpdateCard(int cardId, string cardNumber, string cardHolderName, int cvc);
+    Task CreateCard(Card newCard);
+    Task<bool?> UpdateCard(int? cardId, string? cardNumber, string? cardHolderName, int? cvc);
     Task DeleteCard(int cardId);
     Task<decimal> GetCardBalanceAsync(int cardId);
     Task<bool> CardExists(int cardId);

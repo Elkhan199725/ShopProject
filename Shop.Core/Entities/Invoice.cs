@@ -7,27 +7,23 @@ public class Invoice : AbstractClass
     public Invoice()
     {
         InvoiceItems = new List<InvoiceItem>();
-    }
-
-    public Invoice(decimal? totalPrice, DateTime? invoiceDate, string? paymentMethod, User? user, Wallet? wallet)
-        : this()
-    {
-        TotalPrice = totalPrice;
-        InvoiceDate = invoiceDate;
-        PaymentMethod = paymentMethod;
-        User = user;
-        Wallet = wallet;
+        Users = new List<User>();
+        Cards = new List<Card>();
     }
 
     public int? Id { get; set; }
-    public decimal? TotalPrice { get; set; }
     public DateTime? InvoiceDate { get; set; }
-    public string? PaymentMethod { get; set; }
     public int? UserId { get; set; }
-    public int? WalletId { get; set; }
-    public string? Status { get; set; } = "unpaid";
+    public InvoiceStatus Status { get; set; } = InvoiceStatus.Unpaid;
 
     public User? User { get; set; }
-    public Wallet? Wallet { get; set; }
     public ICollection<InvoiceItem> InvoiceItems { get; set; }
+    public ICollection<User> Users { get; set; }
+    public ICollection<Card> Cards { get; set; }
+}
+
+public enum InvoiceStatus
+{
+    Unpaid,
+    Paid
 }

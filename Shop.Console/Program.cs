@@ -2,7 +2,9 @@
 
 using FluentAssertions.Common;
 using Microsoft.EntityFrameworkCore;
+using Shop.Business.Interfaces;
 using Shop.Business.Services;
+using Shop.Business.Utilities.Exceptions;
 using Shop.Business.Utilities.Helpers;
 using Shop.Core.Entities;
 using Shop.Core.Services;
@@ -16,11 +18,15 @@ Console.WriteLine(s);
 
 UserService userService = new UserService(new AppDbContext());
 ProductService productService = new ProductService(new AppDbContext());
+CardService cardService = new CardService(new AppDbContext());
+WalletService walletService = new WalletService(new AppDbContext(),cardService);
+InvoiceItemService invoiceItemService = new InvoiceItemService(new AppDbContext());
+InvoiceService invoiceService = new InvoiceService(new AppDbContext(), cardService, invoiceItemService);
 
 bool appRun = true;
 while (appRun)
 {
-    Console.WriteLine("\n1) Login\n2) Exit");
+    Console.WriteLine("\n1) Login\n2) Register\n3) Exit");
     Console.Write("Choose the option: ");
     var choice = Console.ReadLine();
 
@@ -44,11 +50,23 @@ while (appRun)
             else
             {
                 // User panel logic here
-                await UserPanel(userService, productService);
+                await UserPanel(userService, productService, cardService, walletService, invoiceItemService, invoiceService);
             }
         }
     }
-    else if (choice == "2") // Exit
+    else if (choice == "2") // Register
+    {
+        var registrationSuccess = await AttemptRegistration(userService);
+        if (registrationSuccess)
+        {
+            Console.WriteLine("Registration successful. Please login.");
+        }
+        else
+        {
+            Console.WriteLine("Registration failed. Please try again.");
+        }
+    }
+    else if (choice == "3") // Exit
     {
         Console.WriteLine("Exiting application...");
         appRun = false;
@@ -57,6 +75,19 @@ while (appRun)
     {
         Console.WriteLine("Invalid option. Please try again.");
     }
+}
+
+static async Task<bool> AttemptRegistration(UserService userService)
+{
+    Console.Write("Enter username: ");
+    var username = Console.ReadLine();
+    Console.Write("Enter email: ");
+    var email = Console.ReadLine();
+    Console.Write("Enter password: ");
+    var password = ReadPassword();
+
+    var registrationSuccess = await userService.RegisterUser(username, email, password);
+    return registrationSuccess;
 }
 
 static async Task<(bool, string)> AttemptLogin(UserService userService)
@@ -101,22 +132,24 @@ static async Task AdminPanel(UserService userService, ProductService productServ
     while (adminSession)
     {
         Console.WriteLine("\n--- Admin Panel ---");
-        Console.WriteLine("1) Create User");
-        Console.WriteLine("2) Update User");
-        Console.WriteLine("3) Delete User");
-        Console.WriteLine("4) Get All Users");
-        Console.WriteLine("5) Get User By Id");
-        Console.WriteLine("6) Activate User");
-        Console.WriteLine("7) Deactivate User");
-        Console.WriteLine("8) Create Product");
-        Console.WriteLine("9) Update Product");
-        Console.WriteLine("10) Delete Product");
-        Console.WriteLine("11) Activate Product");
-        Console.WriteLine("12) Deactivate Product");
-        Console.WriteLine("13) Check if Product Exists");
-        Console.WriteLine("14) Get All Products");
-        Console.WriteLine("15) Get Product By Id");
-        Console.WriteLine("16) Logout");
+        Console.WriteLine(
+            "1) Create User\n" +
+            "2) Update User\n" +
+            "3) Delete User\n" +
+            "4) Get All Users\n" +
+            "5) Get User By Id\n" +
+            "6) Activate User\n" +
+            "7) Deactivate User\n" +
+            "8) Create Product\n" +
+            "9) Update Product\n" +
+            "10) Delete Product\n" +
+            "11) Activate Product\n" +
+            "12) Deactivate Product\n" +
+            "13) Check if Product Exists\n" +
+            "14) Get All Products\n" +
+            "15) Get Product By Id\n" +
+            "16) Logout\n" +
+            "Choose an option: ");
         Console.Write("Choose an option: ");
         var input = Console.ReadLine();
         if (int.TryParse(input, out int choice) && Enum.IsDefined(typeof(AdminMenu), choice))
@@ -554,18 +587,37 @@ static async Task AdminPanel(UserService userService, ProductService productServ
         }
     }
 }
-static async Task UserPanel(UserService userService, ProductService productService)
+static async Task UserPanel(UserService userService, ProductService productService, CardService cardService, WalletService walletService, InvoiceItemService invoiceItemService, InvoiceService invoiceService)
 {
     bool userSession = true;
     while (userSession)
     {
         Console.WriteLine("\n--- User Panel ---");
-        Console.WriteLine("1) Get User By Id");
-        Console.WriteLine("2) Check Product Existence");
-        Console.WriteLine("3) Get All Products");
-        Console.WriteLine("4) Get Product By Id");
-        Console.WriteLine("5) Logout");
-        Console.Write("Choose an option: ");
+        Console.Write(
+            "1) Get User By Id\n" +
+            "2) Product Exists\n" +
+            "3) Get All Products\n" +
+            "4) Get Product By Id\n" +
+            "5) Get Card By Id\n" +
+            "6) Get All Cards\n" +
+            "7) Create Card\n" +
+            "8) Update Card\n" +
+            "9) Delete Card\n" +
+            "10) Increase Card Balance\n" +
+            "11) Decrease Card Balance\n" +
+            "12) Check if Card Exists\n" +
+            "13) Get Card Balance\n" +
+            "14) Get Wallet By Id\n" +
+            "15) Get All Wallets\n" +
+            "16) Create Wallet\n" +
+            "17) Update Wallet\n" +
+            "18) Delete Wallet\n" +
+            "19) Get Wallet Balance\n" +
+            "20) Increase Wallet Balance\n" +
+            "21) CreateInvoiceItem\n" +
+            "22)CreateInvoice\n" +
+            "22) Logout\n" +
+            "Choose an option: ");
         var input = Console.ReadLine();
         if (int.TryParse(input, out int choice) && Enum.IsDefined(typeof(UserMenu), choice))
         {
@@ -656,6 +708,526 @@ static async Task UserPanel(UserService userService, ProductService productServi
                     else
                     {
                         Console.WriteLine("Invalid product ID.");
+                    }
+                    break;
+                case UserMenu.GetCardById:
+                    Console.Write("Enter the card ID to retrieve: ");
+                    if (int.TryParse(Console.ReadLine(), out int cardIdToRetrieve))
+                    {
+                        try
+                        {
+                            var card = await cardService.GetCardById(cardIdToRetrieve);
+
+                            if (card != null)
+                            {
+                                Console.WriteLine("\n--- Card Details ---");
+                                Console.WriteLine($"ID: {card.Id}");
+                                Console.WriteLine($"Card Number: {card.CardNumber}");
+                                Console.WriteLine($"Card Holder Name: {card.CardHolderName}");
+                                Console.WriteLine($"CVC: {card.Cvc}");
+                                Console.WriteLine($"User ID: {card.UserId}");
+                                Console.WriteLine($"Balance: {card.Balance:C}");
+                                Console.WriteLine($"Wallet ID: {card.WalletId}");
+                            }
+                            else
+                            {
+                                Console.WriteLine("Card not found.");
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine($"An error occurred while retrieving the card: {ex.Message}");
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid card ID.");
+                    }
+                    break;
+
+                case UserMenu.GetAllCards:
+                    try
+                    {
+                        var allCards = await cardService.GetAllCards();
+
+                        Console.WriteLine("\n--- All Cards ---");
+                        foreach (var card in allCards)
+                        {
+                            Console.WriteLine($"ID: {card.Id}");
+                            Console.WriteLine($"Card Number: {card.CardNumber}");
+                            Console.WriteLine($"Card Holder Name: {card.CardHolderName}");
+                            Console.WriteLine($"CVC: {card.Cvc}");
+                            Console.WriteLine($"User ID: {card.UserId}");
+                            Console.WriteLine($"Balance: {card.Balance:C}");
+                            Console.WriteLine($"Wallet ID: {card.WalletId}");
+                            Console.WriteLine("---------------------------------");
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"An error occurred while getting all cards: {ex.Message}");
+                    }
+                    break;
+
+                case UserMenu.CreateCard:
+                    Console.Write("Enter card number: ");
+                    var cardNumber = Console.ReadLine();
+                    Console.Write("Enter card holder name: ");
+                    var cardHolderName = Console.ReadLine();
+                    Console.Write("Enter CVV: ");
+                    if (!int.TryParse(Console.ReadLine(), out int cvc))
+                    {
+                        Console.WriteLine("Invalid CVV format. Please enter a valid integer.");
+                        break;
+                    }
+                    Console.Write("Enter user ID: ");
+                    if (!int.TryParse(Console.ReadLine(), out int userId))
+                    {
+                        Console.WriteLine("Invalid user ID format. Please enter a valid integer.");
+                        break;
+                    }
+                    Console.Write("Enter balance: ");
+                    if (!decimal.TryParse(Console.ReadLine(), out decimal balance))
+                    {
+                        Console.WriteLine("Invalid balance format. Please enter a valid decimal.");
+                        break;
+                    }
+                    Console.Write("Enter wallet ID: ");
+                    if (!int.TryParse(Console.ReadLine(), out int walletId))
+                    {
+                        Console.WriteLine("Invalid wallet ID format. Please enter a valid integer.");
+                        break;
+                    }
+
+                    try
+                    {
+                        var newCard = new Card(cardNumber, cardHolderName, cvc, userId, balance, walletId);
+                        await cardService.CreateCard(newCard);
+                        Console.WriteLine("Card created successfully.");
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Error: {ex.Message}");
+                    }
+                    break;
+                case UserMenu.UpdateCard:
+                    Console.Write("Enter the ID of the card to update: ");
+                    if (int.TryParse(Console.ReadLine(), out int cardIdToUpdate))
+                    {
+                        Console.Write("Enter new card number (leave blank to keep unchanged): ");
+                        var newCardNumberInput = Console.ReadLine();
+                        string? newCardNumber = string.IsNullOrWhiteSpace(newCardNumberInput) ? null : newCardNumberInput;
+
+                        Console.Write("Enter new card holder name (leave blank to keep unchanged): ");
+                        var newCardHolderNameInput = Console.ReadLine();
+                        string? newCardHolderName = string.IsNullOrWhiteSpace(newCardHolderNameInput) ? null : newCardHolderNameInput;
+
+                        Console.Write("Enter new CVV (leave blank to keep unchanged): ");
+                        var cvcInput = Console.ReadLine();
+                        int? newCvc = null;
+                        if (!string.IsNullOrWhiteSpace(cvcInput))
+                        {
+                            newCvc = int.Parse(cvcInput);
+                        }
+
+                        try
+                        {
+                            await cardService.UpdateCard(cardIdToUpdate, newCardNumber, newCardHolderName, newCvc);
+                            Console.WriteLine("Card updated successfully.");
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine($"Error: {ex.Message}");
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid card ID.");
+                    }
+                    break;
+
+                case UserMenu.DeleteCard:
+                    Console.Write("Enter the ID of the card to delete: ");
+                    if (int.TryParse(Console.ReadLine(), out int cardIdToDelete))
+                    {
+                        // Confirmation before deletion
+                        Console.Write($"Are you sure you want to permanently delete the card with ID {cardIdToDelete}? (yes/no): ");
+                        var confirmation = Console.ReadLine();
+                        if (confirmation.Equals("yes", StringComparison.OrdinalIgnoreCase))
+                        {
+                            try
+                            {
+                                await cardService.DeleteCard(cardIdToDelete);
+                                Console.WriteLine("Card deleted successfully.");
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine($"Error: {ex.Message}");
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("Deletion cancelled.");
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid card ID.");
+                    }
+                    break;
+                case UserMenu.IncreaseCardBalance:
+                    Console.Write("Enter the ID of the card to increase balance: ");
+                    if (int.TryParse(Console.ReadLine(), out int cardIdToIncrease))
+                    {
+                        Console.Write("Enter the amount to increase: ");
+                        if (decimal.TryParse(Console.ReadLine(), out decimal increaseAmount))
+                        {
+                            try
+                            {
+                                await cardService.IncreaseCardBalance(cardIdToIncrease, increaseAmount);
+                                Console.WriteLine("Balance increased successfully.");
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine($"Error: {ex.Message}");
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("Invalid amount format. Please enter a valid decimal.");
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid card ID.");
+                    }
+                    break;
+                case UserMenu.DecreaseCardBalance:
+                    Console.Write("Enter the ID of the card to decrease balance: ");
+                    if (int.TryParse(Console.ReadLine(), out int cardIdToDecrease))
+                    {
+                        Console.Write("Enter the amount to decrease: ");
+                        if (decimal.TryParse(Console.ReadLine(), out decimal decreaseAmount))
+                        {
+                            try
+                            {
+                                await cardService.DecreaseCardBalance(cardIdToDecrease, decreaseAmount);
+                                Console.WriteLine("Balance decreased successfully.");
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine($"Error: {ex.Message}");
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("Invalid amount format. Please enter a valid decimal.");
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid card ID.");
+                    }
+                    break;
+
+                case UserMenu.CardExists:
+                    Console.Write("Enter the ID of the card to check: ");
+                    if (int.TryParse(Console.ReadLine(), out int cardIdToCheck))
+                    {
+                        try
+                        {
+                            var exists = await cardService.CardExists(cardIdToCheck);
+                            Console.WriteLine($"Card with ID {cardIdToCheck} {(exists ? "exists." : "does not exist.")}");
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine($"Error: {ex.Message}");
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid card ID.");
+                    }
+                    break;
+
+                case UserMenu.GetCardBalance:
+                    Console.Write("Enter the ID of the card to get balance: ");
+                    if (int.TryParse(Console.ReadLine(), out int cardIdToGetBalance))
+                    {
+                        try
+                        {
+                            var cardBalance = await cardService.GetCardBalanceAsync(cardIdToGetBalance);
+                            Console.WriteLine($"Balance of card with ID {cardIdToGetBalance}: {cardBalance}");
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine($"Error: {ex.Message}");
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid card ID.");
+                    }
+                    break;
+
+                case UserMenu.GetWalletById:
+                    int walletID; // Define walletId outside the if statement
+                    Console.Write("Enter the ID of the wallet to retrieve: ");
+                    if (int.TryParse(Console.ReadLine(), out walletID))
+                    {
+                        try
+                        {
+                            var wallet = await walletService.GetWalletById(walletID);
+                            Console.WriteLine($"Wallet found with ID {walletID}: {wallet}");
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine($"Error: {ex.Message}");
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid wallet ID.");
+                    }
+                    break;
+
+                case UserMenu.GetAllWallets:
+                    try
+                    {
+                        var wallets = await walletService.GetAllWallets();
+                        Console.WriteLine("All Wallets:");
+                        foreach (var wallet in wallets)
+                        {
+                            Console.WriteLine($"ID: {wallet.Id}, User ID: {wallet.UserId}, Balance: {wallet.Balance}");
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Error: {ex.Message}");
+                    }
+                    break;
+
+                case UserMenu.CreateWallet:
+                    Console.Write("Enter user ID: ");
+                    if (int.TryParse(Console.ReadLine(), out int userID))
+                    {
+                        try
+                        {
+                            var wallet = new Wallet { UserId = userID };  // Create an empty wallet object with the user ID
+                            bool created = await walletService.CreateWallet(wallet, userID);
+                            if (created)
+                            {
+                                Console.WriteLine("Wallet created successfully.");
+                            }
+                            else
+                            {
+                                Console.WriteLine("Failed to create wallet.");
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine($"Error: {ex.Message}");
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid user ID format. Please enter a valid integer.");
+                    }
+                    break;
+
+                case UserMenu.UpdateWallet:
+                    Console.Write("Enter the ID of the wallet to update: ");
+                    if (int.TryParse(Console.ReadLine(), out int wAlletID))
+                    {
+                        Console.Write("Enter the new user ID: ");
+                        if (int.TryParse(Console.ReadLine(), out int uSerID))
+                        {
+                            try
+                            {
+                                bool isUpdated = await walletService.UpdateWallet(wAlletID, uSerID);
+                                if (isUpdated)
+                                {
+                                    Console.WriteLine("Wallet user ID updated successfully.");
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Failed to update wallet user ID. Wallet not found.");
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine($"Error: {ex.Message}");
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("Invalid user ID.");
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid wallet ID.");
+                    }
+                    break;
+
+                case UserMenu.DeleteWallet:
+                    Console.Write("Enter the ID of the wallet to delete: ");
+                    if (int.TryParse(Console.ReadLine(), out int walletIdToDelete))
+                    {
+                        try
+                        {
+                            bool success = await walletService.DeleteWallet(walletIdToDelete);
+                            if (success)
+                            {
+                                Console.WriteLine($"Wallet with ID {walletIdToDelete} deleted successfully.");
+                            }
+                            else
+                            {
+                                Console.WriteLine($"Failed to delete wallet with ID {walletIdToDelete}.");
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine($"Error: {ex.Message}");
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid wallet ID.");
+                    }
+                    break;
+
+                case UserMenu.GetWalletBalance:
+                    Console.Write("Enter your user ID: ");
+                    if (int.TryParse(Console.ReadLine(), out int userIdForBalance))
+                    {
+                        try
+                        {
+                            var Balance = await walletService.GetWalletBalance(userIdForBalance);
+                            Console.WriteLine($"Your wallet balance: {Balance}");
+                        }
+                        catch (NotFoundException ex)
+                        {
+                            Console.WriteLine($"Error: {ex.Message}");
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine($"Error: Failed to retrieve wallet balance. {ex.Message}");
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid user ID.");
+                    }
+                    break;
+
+                case UserMenu.IncreaseWalletBalance:
+                    Console.Write("Enter the ID of the wallet: ");
+                    if (int.TryParse(Console.ReadLine(), out int WalletId))
+                    {
+                        Console.Write("Enter the ID of the card: ");
+                        if (int.TryParse(Console.ReadLine(), out int cardIdd))
+                        {
+                            Console.Write("Enter the amount to increase: ");
+                            if (decimal.TryParse(Console.ReadLine(), out decimal amount))
+                            {
+                                try
+                                {
+                                    await walletService.IncreaseWalletBalance(WalletId, cardIdd, amount);
+                                    Console.WriteLine("Wallet balance increased successfully.");
+                                }
+                                catch (Exception ex)
+                                {
+                                    Console.WriteLine($"Error: {ex.Message}");
+                                }
+                            }
+                            else
+                            {
+                                Console.WriteLine("Invalid amount.");
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("Invalid card ID.");
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid wallet ID.");
+                    }
+                    break;
+
+                case UserMenu.CreateInvoiceItem:
+                    Console.WriteLine("Creating Invoice Item...");
+                    // Collect necessary information from the user (e.g., product ID, quantity)
+                    Console.Write("Enter the ID of the product: ");
+                    if (int.TryParse(Console.ReadLine(), out int productId))
+                    {
+                        Console.Write("Enter the quantity: ");
+                        if (int.TryParse(Console.ReadLine(), out int quantity))
+                        {
+                            try
+                            {
+                                // Call the service method to create the invoice item
+                                var newItem = new InvoiceItem
+                                {
+                                    ProductId = productId,
+                                    Quantity = quantity
+                                };
+                                bool success = await invoiceItemService.CreateInvoiceItem(newItem);
+                                if (success)
+                                {
+                                    Console.WriteLine("Invoice Item created successfully.");
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Failed to create Invoice Item.");
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine($"Error: {ex.Message}");
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("Invalid quantity entered.");
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid product ID entered.");
+                    }
+                    break;
+
+                case UserMenu.CreateInvoice:
+                    Console.WriteLine("Enter the IDs of the invoice items (comma-separated):");
+                    string inputIds = Console.ReadLine();
+                    var invoiceItemIds = inputIds.Split(',', StringSplitOptions.RemoveEmptyEntries)
+                                                  .Select(id => int.Parse(id))
+                                                  .ToList();
+
+                    Console.Write("Enter the ID of the card to pay with: ");
+                    int cardId = int.Parse(Console.ReadLine());
+
+                    Console.Write("Enter the ID of the user placing the order: ");
+                    int userIdd = int.Parse(Console.ReadLine());
+
+                    try
+                    {
+                        bool success = await invoiceService.CreateInvoice(invoiceItemIds, cardId, userIdd);
+                        if (success)
+                        {
+                            Console.WriteLine("Invoice created successfully.");
+                        }
+                        else
+                        {
+                            Console.WriteLine("Failed to create invoice.");
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Error: {ex.Message}");
                     }
                     break;
 

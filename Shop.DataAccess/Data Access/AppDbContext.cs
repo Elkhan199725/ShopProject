@@ -39,6 +39,7 @@ public class AppDbContext : DbContext
             .WithMany(w => w.Cards)
             .HasForeignKey(c => c.WalletId);
 
+
         modelBuilder.Entity<User>()
             .HasMany(u => u.DeliveryAddresses)
             .WithOne(da => da.User)
@@ -68,13 +69,9 @@ public class AppDbContext : DbContext
             .HasIndex(u => new { u.UserName, u.Email })
             .IsUnique();
 
-        modelBuilder.Entity<Wallet>()
-            .HasMany(w => w.Invoices)
-            .WithOne(i => i.Wallet)
-            .HasForeignKey(i => i.WalletId);
 
         modelBuilder.Entity<Card>()
-            .HasIndex(c => new { c.CardNumber, c.Cvc})
+            .HasIndex(c => new { c.CardNumber, c.Cvc })
             .IsUnique();
 
         modelBuilder.Entity<Product>()
@@ -91,6 +88,11 @@ public class AppDbContext : DbContext
             .HasMany(i => i.InvoiceItems)
             .WithOne(ii => ii.Invoice)
             .HasForeignKey(ii => ii.InvoiceId);
+        
+        modelBuilder.Entity<Invoice>()
+            .HasMany(i => i.Cards)
+            .WithOne(c => c.Invoice)
+            .HasForeignKey(c => c.InvoiceId);
 
         modelBuilder.Entity<Category>()
             .HasMany(c => c.Products)

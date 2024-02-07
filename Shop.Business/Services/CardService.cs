@@ -94,29 +94,31 @@ public class CardService : ICardService
         return cards;
     }
 
-    public async Task CreateCard(int userId, string cardNumber, string cardHolderName, int cvc)
+    public async Task CreateCard(Card newCard)
     {
-        var card = new Card
+        var cardEntity = new Card
         {
-            CardNumber = cardNumber,
-            CardHolderName = cardHolderName,
-            Cvc = cvc
+            CardNumber = newCard.CardNumber,
+            CardHolderName = newCard.CardHolderName,
+            Cvc = newCard.Cvc,
+            Balance = newCard.Balance, // Include balance
+            WalletId = newCard.WalletId // Include wallet ID
         };
 
-        var user = await _dbContext.Users.FindAsync(userId);
+        var user = await _dbContext.Users.FindAsync(newCard.UserId);
         if (user == null)
         {
             throw new NotFoundException("User not found.");
         }
 
-        card.User = user;
+        cardEntity.User = user;
 
-        card.Created = DateTime.UtcNow;
-        await _dbContext.Cards.AddAsync(card);
+        cardEntity.Created = DateTime.UtcNow;
+        await _dbContext.Cards.AddAsync(cardEntity);
         await _dbContext.SaveChangesAsync();
     }
 
-    public async Task UpdateCard(int cardId, string cardNumber, string cardHolderName, int cvc)
+    public async Task<bool?> UpdateCard(int? cardId, string? cardNumber, string? cardHolderName, int? cvc)
     {
         var existingCard = await _dbContext.Cards.FindAsync(cardId);
 
@@ -124,15 +126,18 @@ public class CardService : ICardService
         {
             var createdTime = existingCard.Created;
 
-            existingCard.CardNumber = cardNumber;
-            existingCard.CardHolderName = cardHolderName;
-            existingCard.Cvc = cvc;
+            existingCard.CardNumber = !string.IsNullOrWhiteSpace(cardNumber) ? cardNumber : existingCard.CardNumber;
+            existingCard.CardHolderName = !string.IsNullOrWhiteSpace(cardHolderName) ? cardHolderName : existingCard.CardHolderName;
+            existingCard.Cvc = cvc != null ? cvc : existingCard.Cvc; // assuming cvc is not nullable
 
             existingCard.Created = createdTime;
             existingCard.Updated = DateTime.UtcNow;
 
             await _dbContext.SaveChangesAsync();
+            return true;
         }
+
+        return false; // Card not found
     }
 
     public async Task DeleteCard(int cardId)

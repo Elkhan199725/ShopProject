@@ -9,7 +9,5 @@ namespace Shop.Business.Interfaces;
 
 public interface IInvoiceItemService
 {
-    Task<InvoiceItem> CreateInvoiceItemAsync(int quantity, decimal price, int invoiceId, int productId);
-    Task<List<InvoiceItem>> GetInvoiceItemsAsync(int invoiceId);
-    Task<decimal> CalculateTotalAsync(int invoiceId);
+    Task<bool> CreateInvoiceItem(InvoiceItem newItem);
 }

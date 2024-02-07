@@ -121,5 +121,37 @@ namespace Shop.Core.Services
 
             return user != null;
         }
+        public async Task<bool> RegisterUser(string username, string email, string password)
+        {
+            // Check if the username or email already exists
+            var existingUser = await _context.Users.FirstOrDefaultAsync(u => u.UserName == username || u.Email == email);
+            if (existingUser != null)
+            {
+                // Username or email already exists, registration failed
+                return false;
+            }
+
+            // Create a new user entity
+            var newUser = new User
+            {
+                UserName = username,
+                Email = email,
+                Password = password // Note: You should hash the password before storing it in the database for security
+            };
+
+            try
+            {
+                // Add the new user to the database
+                _context.Users.Add(newUser);
+                await _context.SaveChangesAsync();
+                return true; // Registration successful
+            }
+            catch (Exception ex)
+            {
+                // Handle any exceptions that occur during user registration
+                Console.WriteLine($"Error registering user: {ex.Message}");
+                return false; // Registration failed
+            }
+        }
     }
 }
