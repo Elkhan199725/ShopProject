@@ -2,6 +2,8 @@
 
 using FluentAssertions.Common;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.Extensions.CommandLineUtils;
 using Shop.Business.Interfaces;
 using Shop.Business.Services;
 using Shop.Business.Utilities.Exceptions;
@@ -12,23 +14,28 @@ using Shop.DataAccess.Data_Access;
 using Shop.DataAccess.Migrations;
 using System;
 
+Console.ForegroundColor = ConsoleColor.Cyan;
 string s = "Welcome to Shop";
 Console.SetCursorPosition((Console.WindowWidth - s.Length) / 2, Console.CursorTop);
 Console.WriteLine(s);
-
+Console.ResetColor();
 UserService userService = new UserService(new AppDbContext());
 ProductService productService = new ProductService(new AppDbContext());
 CardService cardService = new CardService(new AppDbContext());
 WalletService walletService = new WalletService(new AppDbContext(),cardService);
 InvoiceItemService invoiceItemService = new InvoiceItemService(new AppDbContext());
 InvoiceService invoiceService = new InvoiceService(new AppDbContext(), cardService, invoiceItemService);
+BrandService brandService = new BrandService(new AppDbContext());
+CategoryService categoryService = new CategoryService(new AppDbContext());
 
 bool appRun = true;
 while (appRun)
 {
+    Console.ForegroundColor = ConsoleColor.DarkMagenta;
     Console.WriteLine("\n1) Login\n2) Register\n3) Exit");
-    Console.Write("Choose the option: ");
     var choice = Console.ReadLine();
+    Console.Write("Choose the option: ");
+    Console.ResetColor();
 
     if (choice == "1") // Login
     {
@@ -45,7 +52,7 @@ while (appRun)
             if (isAdmin)
             {
                 // Admin panel logic here
-                await AdminPanel(userService, productService);
+                await AdminPanel(userService, productService, brandService, categoryService);
             }
             else
             {
@@ -126,7 +133,7 @@ static string ReadPassword()
     return password;
 }
 
-static async Task AdminPanel(UserService userService, ProductService productService)
+static async Task AdminPanel(UserService userService, ProductService productService, BrandService brandService, CategoryService categoryService)
 {
     bool adminSession = true;
     while (adminSession)
@@ -148,9 +155,10 @@ static async Task AdminPanel(UserService userService, ProductService productServ
             "13) Check if Product Exists\n" +
             "14) Get All Products\n" +
             "15) Get Product By Id\n" +
-            "16) Logout\n" +
+            "16) CreateBrand\n" +
+            "17) CreateCategory\n" +
+            "18) Logout\n" +
             "Choose an option: ");
-        Console.Write("Choose an option: ");
         var input = Console.ReadLine();
         if (int.TryParse(input, out int choice) && Enum.IsDefined(typeof(AdminMenu), choice))
         {
@@ -571,6 +579,35 @@ static async Task AdminPanel(UserService userService, ProductService productServ
                     }
                     break;
 
+                case AdminMenu.CreateBrand:
+                    Console.Write("Enter the name of the brand: ");
+                    string? brandName = Console.ReadLine();
+                    try
+                    {
+                        var createdBrand = await brandService.CreateBrandAsync(brandName);
+                        Console.WriteLine($"Brand '{createdBrand.Name}' created successfully with ID: {createdBrand.Id}");
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Error creating brand: {ex.Message}");
+                    }
+                    break;
+
+                case AdminMenu.CreateCategory:
+                    Console.Write("Enter the name of the category: ");
+                    string? categoryName = Console.ReadLine();
+
+                    try
+                    {
+                        Category newCategory = await categoryService.CreateCategoryAsync(categoryName);
+                        Console.WriteLine($"Category '{newCategory.Name}' created successfully.");
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Error: {ex.Message}");
+                    }
+                    break;
+
                 case AdminMenu.Logout:
                     adminSession = false;
                     Console.WriteLine("Logging out...");
@@ -615,7 +652,7 @@ static async Task UserPanel(UserService userService, ProductService productServi
             "19) Get Wallet Balance\n" +
             "20) Increase Wallet Balance\n" +
             "21) CreateInvoiceItem\n" +
-            "22)CreateInvoice\n" +
+            "22) CreateInvoice\n" +
             "22) Logout\n" +
             "Choose an option: ");
         var input = Console.ReadLine();

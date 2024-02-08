@@ -22,17 +22,25 @@ public class CategoryService : ICategoryService
 
     public async Task<Category> CreateCategoryAsync(string name)
     {
-        ValidateCategoryName(name);
-
-        var category = new Category
+        try
         {
-            Name = name
-        };
+            ValidateCategoryName(name);
 
-        _dbContext.Categories.Add(category);
-        await _dbContext.SaveChangesAsync();
+            var category = new Category
+            {
+                Name = name
+            };
 
-        return category;
+            _dbContext.Categories.Add(category);
+            await _dbContext.SaveChangesAsync();
+
+            return category;
+        }
+        catch (Exception ex)
+        {
+            // Log the error or handle it accordingly
+            throw new Exception("Failed to create category.", ex);
+        }
     }
 
     public async Task<List<Category>> GetAllCategoriesAsync()

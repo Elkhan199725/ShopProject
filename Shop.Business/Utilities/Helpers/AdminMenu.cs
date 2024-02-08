@@ -23,5 +23,7 @@ public enum AdminMenu
     ProductExists,
     GetAllProducts,
     GetProductById,
+    CreateBrand,
+    CreateCategory,
     Logout
 }

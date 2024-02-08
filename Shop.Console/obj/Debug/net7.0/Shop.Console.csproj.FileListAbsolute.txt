@@ -260,3 +260,4 @@ C:\Users\Elkhan Mammadli\Source\Repos\ShopProject\Shop.Console\bin\Debug\net7.0\
 C:\Users\Elkhan Mammadli\Source\Repos\ShopProject\Shop.Console\bin\Debug\net7.0\Microsoft.Extensions.Identity.Core.dll
 C:\Users\Elkhan Mammadli\Source\Repos\ShopProject\Shop.Console\bin\Debug\net7.0\FluentAssertions.dll
 C:\Users\Elkhan Mammadli\Source\Repos\ShopProject\Shop.Console\bin\Debug\net7.0\Microsoft.Extensions.Identity.Stores.dll
+C:\Users\Elkhan Mammadli\source\repos\ShopProject\Shop.Console\bin\Debug\net7.0\Microsoft.Extensions.CommandLineUtils.dll
